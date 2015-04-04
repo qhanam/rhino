@@ -13,4 +13,7 @@ lib/
 out/
 target/
 
-
+# eclipse project files
+.project
+.classpath
+*.swp

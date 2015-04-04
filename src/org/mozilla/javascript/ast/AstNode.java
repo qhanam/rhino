@@ -10,6 +10,9 @@ import org.mozilla.javascript.Kit;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
 
+import ca.ubc.ece.salt.gumtree.ast.ClassifiedASTNode;
+
+import java.io.InvalidClassException;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -61,11 +64,48 @@ import java.util.Map;
  * statements, as the distinction in JavaScript is not as clear-cut as in
  * Java or C++. <p>
  */
-public abstract class AstNode extends Node implements Comparable<AstNode> {
+public abstract class AstNode extends Node implements Comparable<AstNode>, ClassifiedASTNode {
 
     protected int position = -1;
     protected int length = 1;
     protected AstNode parent;
+    
+    /** The change type from AST differencing. **/
+    protected ChangeType changeType;
+    
+    /** The source or destination node that this node maps to. **/
+    protected AstNode mappedNode;
+    
+    /**
+     * @param changeType The change applied to this node from AST differencing.
+     */
+    public void setChangeType(ChangeType changeType) {
+    	this.changeType = changeType;
+    }
+    
+    /**
+     * @return The change applied to this node from AST differencing.
+     */
+    public ChangeType getChangeType() {
+    	return this.changeType;
+    }
+
+    /**
+     * @param node The source or destination node to map this node to.
+     */
+    public void map(ClassifiedASTNode node) throws InvalidClassException {
+    	if(!(node instanceof AstNode)) throw new InvalidClassException("The ClassifiedASTNode is not an AstNode.");
+    	this.mappedNode = (AstNode)node;
+    }
+    
+    /**
+     * @return The source or destination node that maps to this node or null
+     * 		   if this node does not have a mapping (which is the case for
+     * 		   inserted and removed nodes).
+     */
+    public ClassifiedASTNode getMapping() {
+    	return this.mappedNode;
+    }
 
     private static Map<Integer,String> operatorNames =
             new HashMap<Integer,String>();
@@ -134,6 +174,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
 
     public AstNode() {
         super(Token.ERROR);
+        this.changeType = ChangeType.UNCHANGED;
     }
 
     /**
@@ -599,4 +640,5 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
         visit(dpv);
         return dpv.toString();
     }
+    
 }
