@@ -39,6 +39,14 @@ public class AstRoot extends ScriptNode {
     }
 
     /**
+     * @return the CFG node or edge label (the source code).
+     */
+    @Override
+    public String getCFGLabel() {
+    	return "script entry";
+    }
+
+    /**
      * Returns comment set
      * @return comment set, sorted by start position. Can be {@code null}.
      */

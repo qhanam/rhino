@@ -64,7 +64,7 @@ import java.util.Map;
  * statements, as the distinction in JavaScript is not as clear-cut as in
  * Java or C++. <p>
  */
-public abstract class AstNode extends Node implements Comparable<AstNode>, ClassifiedASTNode {
+public abstract class AstNode extends Node implements Comparable<AstNode>, ClassifiedASTNode, Cloneable {
 
     protected int position = -1;
     protected int length = 1;
@@ -89,6 +89,15 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     public ChangeType getChangeType() {
     	return this.changeType;
     }
+    
+    /**
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+    	return super.clone();
+    }
 
     /**
      * @param node The source or destination node to map this node to.
@@ -105,6 +114,38 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      */
     public ClassifiedASTNode getMapping() {
     	return this.mappedNode;
+    }
+
+    /**
+     * @return true if the AST node is an empty statement.
+     */
+    public boolean isEmpty() {
+    	return this.type == Token.EMPTY;
+    }
+
+    /**
+     * @return the type of AST node as a string.
+     */
+    public String getTypeName() {
+
+        String name;
+
+        try {
+            name = Token.typeToName(this.getType());
+        }
+        catch(IllegalStateException e) {
+            name = Token.keywordToName(this.getType());
+        }
+
+        return name;
+    	
+    }
+
+    /**
+     * @return the CFG node or edge label (the source code).
+     */
+    public String getCFGLabel() {
+    	return this.toSource().replace("\n", "").replace("\"", "\\\"");
     }
 
     private static Map<Integer,String> operatorNames =

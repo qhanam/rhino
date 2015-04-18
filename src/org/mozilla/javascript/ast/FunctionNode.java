@@ -102,6 +102,23 @@ public class FunctionNode extends ScriptNode {
     }
 
     /**
+     * @return the CFG node or edge label (the source code).
+     */
+    @Override
+    public String getCFGLabel() {
+    	String label = this.getName() + "(";
+    	
+    	for(AstNode param : this.getParams()) {
+    		if(label.charAt(label.length() - 1) != '(') label += ",";
+    		label += param.toSource();
+    	}
+    	
+    	label += ")";
+    		
+    	return label;
+    }
+
+    /**
      * Returns function name
      * @return function name, {@code null} for anonymous functions
      */
