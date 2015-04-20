@@ -10,6 +10,7 @@ import org.mozilla.javascript.Token;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,6 +39,32 @@ public class FunctionCall extends AstNode {
 
     public FunctionCall(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Create a new function call. We can't make a shallow clone because
+    	 * .setArguments will set both the original and the clone's args. */
+    	FunctionCall clone = new FunctionCall();
+    	
+    	/* Clone the children. */
+    	AstNode target = null;
+    	List<AstNode> arguments = new LinkedList<AstNode>();
+
+    	if(this.getTarget() != null) target = this.getTarget().clone();
+    	for(AstNode argument : this.getArguments()) arguments.add(argument.clone());
+
+    	clone.setTarget(target);
+    	clone.setArguments(arguments);
+    	
+    	return clone;
+
     }
 
     /**

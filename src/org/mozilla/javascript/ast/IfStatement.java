@@ -40,6 +40,34 @@ public class IfStatement extends AstNode {
     }
 
     /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	IfStatement clone = (IfStatement)super.clone();
+    	
+    	/* Clone the children. */
+    	AstNode condition = null;
+    	AstNode then = null;
+    	AstNode els = null;
+
+    	if(this.getCondition() != null) condition = this.getCondition().clone();
+    	if(this.getThenPart() != null) then = this.getThenPart().clone();
+    	if(this.getElsePart() != null) els = this.getElsePart().clone();
+
+    	clone.setCondition(condition);
+    	clone.setThenPart(then);
+    	clone.setElsePart(els);
+    	
+    	return clone;
+
+    }
+
+    /**
      * Returns if condition
      */
     public AstNode getCondition() {

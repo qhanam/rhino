@@ -10,6 +10,7 @@ import org.mozilla.javascript.Token;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -47,6 +48,34 @@ public class TryStatement extends AstNode {
 
     public TryStatement(int pos, int len) {
         super(pos, len);
+    }
+    
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	TryStatement clone = new TryStatement();
+    	
+    	/* Clone the children. */
+    	AstNode tryBlock = null;
+    	List<CatchClause> catchClauses = new LinkedList<CatchClause>();
+    	AstNode finallyBlock = null;
+
+    	if(this.getTryBlock() != null) tryBlock = this.getTryBlock().clone();
+    	if(this.getFinallyBlock() != null) finallyBlock = this.getFinallyBlock().clone();
+    	for(CatchClause catchClause : this.getCatchClauses()) catchClauses.add((CatchClause)catchClause.clone());
+
+    	clone.setTryBlock(tryBlock);
+    	clone.setFinallyBlock(finallyBlock);
+    	clone.setCatchClauses(catchClauses);
+    	
+    	return clone;
+
     }
 
     public AstNode getTryBlock() {

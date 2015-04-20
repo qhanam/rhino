@@ -39,6 +39,30 @@ public class AstRoot extends ScriptNode {
     }
 
     /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	AstRoot clone = (AstRoot)super.clone();
+    	
+    	/* Clone the children. */
+    	clone.removeChildren();
+    	
+    	/* Clone the children and add them. */
+    	for(Node c : this) {
+    		AstNode child = (AstNode) c;
+    		clone.addChild(child.clone());
+    	}
+    	
+    	return clone;
+
+    }
+
+    /**
      * @return the CFG node or edge label (the source code).
      */
     @Override

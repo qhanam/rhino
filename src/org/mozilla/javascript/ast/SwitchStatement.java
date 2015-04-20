@@ -10,6 +10,7 @@ import org.mozilla.javascript.Token;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -54,6 +55,31 @@ public class SwitchStatement extends Jump {
     public SwitchStatement(int pos, int len) {
         position = pos;
         length = len;
+    }
+
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	SwitchStatement clone = new SwitchStatement();
+    	
+    	/* Clone the children. */
+    	List<SwitchCase> cases = new LinkedList<SwitchCase>();
+    	AstNode expression = null;
+
+    	for(SwitchCase cas : this.getCases()) cases.add((SwitchCase)cas.clone());
+    	if(this.getExpression() != null) expression = this.getExpression().clone();
+
+    	clone.setCases(cases);
+    	clone.setExpression(expression);
+    	
+    	return clone;
+
     }
 
     /**

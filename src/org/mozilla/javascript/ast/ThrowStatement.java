@@ -46,6 +46,28 @@ public class ThrowStatement extends AstNode {
         super(pos, len);
         setExpression(expr);
     }
+    
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	ThrowStatement clone = (ThrowStatement)super.clone();
+    	
+    	/* Clone the children. */
+    	AstNode expression = null;
+
+    	if(this.getExpression() != null) expression = this.getExpression().clone();
+
+    	clone.setExpression(expression);
+    	
+    	return clone;
+
+    }
 
     /**
      * Returns the expression being thrown

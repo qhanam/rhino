@@ -12,6 +12,7 @@ import org.mozilla.javascript.Token;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -99,6 +100,38 @@ public class FunctionNode extends ScriptNode {
     public FunctionNode(int pos, Name name) {
         super(pos);
         setFunctionName(name);
+    }
+
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	FunctionNode clone = new FunctionNode();
+    	
+    	/* Clone the children. */
+    	Name name = (Name)this.getFunctionName().clone();
+    	List<AstNode> parameters = new LinkedList<AstNode>();
+    	for(AstNode param : this.getParams()) {
+    		AstNode paramClone = param.clone();
+    		parameters.add(paramClone);
+
+            if(param == paramClone) {
+                System.out.println("Assertion Failed");
+            }
+    	}
+    	AstNode body = this.getBody().clone();
+
+    	clone.setFunctionName(name);
+    	clone.setParams(parameters);
+    	clone.setBody(body);
+    	
+    	return clone;
+
     }
 
     /**

@@ -46,6 +46,34 @@ public class CatchClause extends AstNode {
     public Name getVarName() {
         return varName;
     }
+    
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	CatchClause clone = (CatchClause)super.clone();
+    	
+    	/* Clone the children. */
+    	Block body = null;
+    	AstNode condition = null;
+    	Name varName = null;
+
+    	if(this.getBody() != null) body = (Block)this.getBody().clone();
+    	if(this.getCatchCondition() != null) condition = this.getCatchCondition().clone();
+    	if(this.getVarName() != null) varName = (Name)this.getVarName().clone();
+
+    	clone.setBody(body);
+    	clone.setCatchCondition(condition);
+    	clone.setVarName(varName);
+    	
+    	return clone;
+
+    }
 
     /**
      * Sets catch variable node, and sets its parent to this node.

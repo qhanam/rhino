@@ -9,6 +9,7 @@ package org.mozilla.javascript.ast;
 import org.mozilla.javascript.Token;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,6 +43,30 @@ public class VariableDeclaration extends AstNode {
 
     public VariableDeclaration(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	VariableDeclaration clone = new VariableDeclaration();
+    	
+    	/* Clone the children. */
+    	List<VariableInitializer> variables = new LinkedList<VariableInitializer>();
+    	
+    	for(AstNode variable : this.getVariables()) variables.add((VariableInitializer)variable.clone());
+    	
+    	clone.setIsStatement(this.isStatement());
+
+    	clone.setVariables(variables);
+    	
+    	return clone;
+
     }
 
     /**

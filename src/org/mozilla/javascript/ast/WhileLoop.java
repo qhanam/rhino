@@ -34,6 +34,31 @@ public class WhileLoop extends Loop {
     }
 
     /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	WhileLoop clone = (WhileLoop)super.clone();
+    	
+    	/* Clone the children. */
+    	AstNode condition = null;
+    	AstNode body = null;
+
+    	if(this.getCondition() != null) condition = this.getCondition().clone();
+    	if(this.getBody() != null) body = this.getBody().clone();
+
+    	clone.setCondition(condition);
+    	clone.setBody(body);
+    	
+    	return clone;
+
+    }
+
+    /**
      * Returns loop condition
      */
     public AstNode getCondition() {

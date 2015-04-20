@@ -39,6 +39,25 @@ public class ReturnStatement extends AstNode {
     }
 
     /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	ReturnStatement clone = (ReturnStatement)super.clone();
+    	
+    	/* Clone the children. */
+    	AstNode returnValue = this.getReturnValue().clone();
+    	clone.setReturnValue(returnValue);
+    	
+    	return clone;
+
+    }
+
+    /**
      * Returns return value, {@code null} if return value is void
      */
     public AstNode getReturnValue() {

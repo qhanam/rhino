@@ -91,12 +91,25 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     }
     
     /**
+     * Clones the AstNode. This covers the following AstNode types (i.e., 
+     * anything that doesn't have children):
+     * 	- Name
+     * 	- Break
+     *  - Continue
+     *  - Comment
+     *  - EmptyExpression
+     *  - EmptyStatement
+     *  - KeywordLiteral
+     *  - Label
+     *  - NumberLiteral
+     *  - RegExpLiteral
+     *  - StringLiteral
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException 
      */
     @Override
-    public Object clone() throws CloneNotSupportedException {
-    	return super.clone();
+    public AstNode clone() throws CloneNotSupportedException {
+    	return (AstNode)super.clone();
     }
 
     /**

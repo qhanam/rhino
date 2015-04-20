@@ -37,6 +37,37 @@ public class ForLoop extends Loop {
     }
 
     /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	ForLoop clone = (ForLoop)super.clone();
+    	
+    	/* Clone the children. */
+    	AstNode initializer = null;
+    	AstNode increment = null;
+    	AstNode condition = null;
+    	AstNode body = null;
+
+    	if(this.getInitializer() != null) initializer = this.getInitializer().clone();
+    	if(this.getIncrement() != null) increment = this.getIncrement().clone();
+    	if(this.getCondition() != null) condition = this.getCondition().clone();
+    	if(this.getBody() != null) body = this.getBody().clone();
+
+    	clone.setInitializer(initializer);
+    	clone.setIncrement(increment);
+    	clone.setCondition(condition);
+    	clone.setBody(body);
+    	
+    	return clone;
+
+    }
+
+    /**
      * Returns loop initializer variable declaration list.
      * This is either a {@link VariableDeclaration}, an
      * {@link Assignment}, or an {@link InfixExpression} of

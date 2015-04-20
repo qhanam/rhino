@@ -35,6 +35,31 @@ public class WithStatement extends AstNode {
     public WithStatement(int pos, int len) {
         super(pos, len);
     }
+    
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	WithStatement clone = (WithStatement)super.clone();
+    	
+    	/* Clone the children. */
+    	AstNode expression = null;
+    	AstNode statement = null;
+
+    	if(this.getExpression() != null) expression = this.getExpression().clone();
+    	if(this.getStatement() != null) statement = this.getStatement().clone();
+
+    	clone.setExpression(expression);
+    	clone.setStatement(statement);
+    	
+    	return clone;
+
+    }
 
     /**
      * Returns object expression

@@ -10,6 +10,7 @@ import org.mozilla.javascript.Token;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -51,6 +52,28 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
 
     public ObjectLiteral(int pos, int len) {
         super(pos, len);
+    }
+    
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	ObjectLiteral clone = new ObjectLiteral();
+    	
+    	/* Clone the children. */
+    	List<ObjectProperty> elements = new LinkedList<ObjectProperty>();
+
+    	for(ObjectProperty element : this.getElements()) elements.add((ObjectProperty)element.clone());
+
+    	clone.setElements(elements);
+    	
+    	return clone;
+
     }
 
     /**

@@ -9,6 +9,7 @@ package org.mozilla.javascript.ast;
 import org.mozilla.javascript.Token;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -45,6 +46,31 @@ public class SwitchCase extends AstNode {
 
     public SwitchCase(int pos, int len) {
         super(pos, len);
+    }    
+    
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	SwitchCase clone = new SwitchCase();
+    	
+    	/* Clone the children. */
+    	List<AstNode> statements = new LinkedList<AstNode>();
+    	AstNode expression = null;
+
+    	for(AstNode statement : this.getStatements()) statements.add(statement.clone());
+    	if(this.getExpression() != null) expression = this.getExpression().clone();
+
+    	clone.setStatements(statements);
+    	clone.setExpression(expression);
+    	
+    	return clone;
+
     }
 
     /**

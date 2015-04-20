@@ -22,6 +22,25 @@ public class ExpressionStatement extends AstNode {
     }
 
     /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	ExpressionStatement clone = (ExpressionStatement)super.clone();
+    	
+    	/* Clone the children. */
+    	AstNode expression = this.getExpression().clone();
+    	clone.setExpression(expression);
+    	
+    	return clone;
+
+    }
+
+    /**
      * Called by the parser to set node type to EXPR_RESULT
      * if this node is not within a Function.
      */

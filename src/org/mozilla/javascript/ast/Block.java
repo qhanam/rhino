@@ -35,6 +35,30 @@ public class Block extends AstNode {
     }
 
     /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone() throws CloneNotSupportedException {
+    	
+    	/* Get the shallow clone. */
+    	Block clone = (Block)super.clone();
+    	
+    	/* Clone the children. */
+    	clone.removeChildren();
+    	
+    	/* Clone the children and add them. */
+    	for(Node c : this) {
+    		AstNode child = (AstNode) c;
+    		clone.addChild(child.clone());
+    	}
+    	
+    	return clone;
+
+    }
+
+    /**
      * Alias for {@link #addChild}.
      */
     public void addStatement(AstNode statement) {
