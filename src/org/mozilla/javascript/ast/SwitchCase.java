@@ -54,17 +54,18 @@ public class SwitchCase extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	SwitchCase clone = new SwitchCase();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	List<AstNode> statements = new LinkedList<AstNode>();
     	AstNode expression = null;
 
-    	for(AstNode statement : this.getStatements()) statements.add(statement.clone());
-    	if(this.getExpression() != null) expression = this.getExpression().clone();
+    	for(AstNode statement : this.getStatements()) statements.add(statement.clone(clone));
+    	if(this.getExpression() != null) expression = this.getExpression().clone(clone);
 
     	clone.setStatements(statements);
     	clone.setExpression(expression);

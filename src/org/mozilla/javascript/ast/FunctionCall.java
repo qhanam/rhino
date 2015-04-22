@@ -47,18 +47,20 @@ public class FunctionCall extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Create a new function call. We can't make a shallow clone because
     	 * .setArguments will set both the original and the clone's args. */
     	FunctionCall clone = new FunctionCall();
+    	clone.setParent(clone);
+    	clone.setLineno(this.getLineno());
     	
     	/* Clone the children. */
     	AstNode target = null;
     	List<AstNode> arguments = new LinkedList<AstNode>();
 
-    	if(this.getTarget() != null) target = this.getTarget().clone();
-    	for(AstNode argument : this.getArguments()) arguments.add(argument.clone());
+    	if(this.getTarget() != null) target = this.getTarget().clone(clone);
+    	for(AstNode argument : this.getArguments()) arguments.add(argument.clone(clone));
 
     	clone.setTarget(target);
     	clone.setArguments(arguments);

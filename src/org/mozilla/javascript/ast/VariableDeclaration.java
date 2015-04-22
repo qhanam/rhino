@@ -51,15 +51,16 @@ public class VariableDeclaration extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	VariableDeclaration clone = new VariableDeclaration();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	List<VariableInitializer> variables = new LinkedList<VariableInitializer>();
     	
-    	for(AstNode variable : this.getVariables()) variables.add((VariableInitializer)variable.clone());
+    	for(AstNode variable : this.getVariables()) variables.add((VariableInitializer)variable.clone(clone));
     	
     	clone.setIsStatement(this.isStatement());
 

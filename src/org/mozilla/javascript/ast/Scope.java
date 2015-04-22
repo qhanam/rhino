@@ -44,6 +44,31 @@ public class Scope extends Jump {
         this.length = len;
     }
 
+    /**
+     * Clones the AstNode.     
+     * @return The clone of the AstNode.
+     * @throws CloneNotSupportedException 
+     */
+    @Override
+    public AstNode clone(AstNode parent) {
+    	
+    	/* Get the shallow clone. */
+    	Scope clone = (Scope)super.clone();
+    	clone.setParent(parent);
+    	
+    	/* Clone the children. */
+    	clone.removeChildren();
+    	
+    	/* Clone the children and add them. */
+    	for(Node c : this) {
+    		AstNode child = (AstNode) c;
+    		clone.addChild(child.clone(clone));
+    	}
+    	
+    	return clone;
+
+    }
+
     public Scope getParentScope() {
         return parentScope;
     }

@@ -44,10 +44,11 @@ public class AstRoot extends ScriptNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	AstRoot clone = (AstRoot)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	clone.removeChildren();
@@ -55,7 +56,7 @@ public class AstRoot extends ScriptNode {
     	/* Clone the children and add them. */
     	for(Node c : this) {
     		AstNode child = (AstNode) c;
-    		clone.addChild(child.clone());
+    		clone.addChild(child.clone(clone));
     	}
     	
     	return clone;

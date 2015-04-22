@@ -27,13 +27,14 @@ public class ExpressionStatement extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	ExpressionStatement clone = (ExpressionStatement)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
-    	AstNode expression = this.getExpression().clone();
+    	AstNode expression = this.getExpression().clone(clone);
     	clone.setExpression(expression);
     	
     	return clone;

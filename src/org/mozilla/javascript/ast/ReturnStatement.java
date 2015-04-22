@@ -44,13 +44,15 @@ public class ReturnStatement extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	ReturnStatement clone = (ReturnStatement)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
-    	AstNode returnValue = this.getReturnValue().clone();
+    	AstNode returnValue = null;
+    	if(this.getReturnValue() != null) returnValue = this.getReturnValue().clone(clone);
     	clone.setReturnValue(returnValue);
     	
     	return clone;

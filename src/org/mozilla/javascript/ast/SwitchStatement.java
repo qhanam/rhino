@@ -63,17 +63,19 @@ public class SwitchStatement extends Jump {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	SwitchStatement clone = new SwitchStatement();
+    	clone.setParent(parent);
+    	clone.setLineno(this.getLineno());
     	
     	/* Clone the children. */
     	List<SwitchCase> cases = new LinkedList<SwitchCase>();
     	AstNode expression = null;
 
-    	for(SwitchCase cas : this.getCases()) cases.add((SwitchCase)cas.clone());
-    	if(this.getExpression() != null) expression = this.getExpression().clone();
+    	for(SwitchCase cas : this.getCases()) cases.add((SwitchCase)cas.clone(clone));
+    	if(this.getExpression() != null) expression = this.getExpression().clone(clone);
 
     	clone.setCases(cases);
     	clone.setExpression(expression);

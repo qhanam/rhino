@@ -64,7 +64,7 @@ import java.util.Map;
  * statements, as the distinction in JavaScript is not as clear-cut as in
  * Java or C++. <p>
  */
-public abstract class AstNode extends Node implements Comparable<AstNode>, ClassifiedASTNode, Cloneable {
+public abstract class AstNode extends Node implements Comparable<AstNode>, ClassifiedASTNode, Cloneable{
 
     protected int position = -1;
     protected int length = 1;
@@ -107,9 +107,25 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException 
      */
-    @Override
-    public AstNode clone() throws CloneNotSupportedException {
-    	return (AstNode)super.clone();
+    public AstNode clone() {
+        try {
+			return (AstNode) super.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+    }
+
+    public AstNode clone(AstNode parent) {
+
+    	AstNode clone = null;
+
+    	try {
+			clone = (AstNode)super.clone();
+		} catch (CloneNotSupportedException e) { }
+    	
+    	clone.setParent(parent);
+    	return clone;
+    	
     }
 
     /**

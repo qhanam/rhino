@@ -60,15 +60,16 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	ObjectLiteral clone = new ObjectLiteral();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	List<ObjectProperty> elements = new LinkedList<ObjectProperty>();
 
-    	for(ObjectProperty element : this.getElements()) elements.add((ObjectProperty)element.clone());
+    	for(ObjectProperty element : this.getElements()) elements.add((ObjectProperty)element.clone(clone));
 
     	clone.setElements(elements);
     	

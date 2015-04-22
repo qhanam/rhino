@@ -42,10 +42,11 @@ public class ForLoop extends Loop {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	ForLoop clone = (ForLoop)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	AstNode initializer = null;
@@ -53,10 +54,10 @@ public class ForLoop extends Loop {
     	AstNode condition = null;
     	AstNode body = null;
 
-    	if(this.getInitializer() != null) initializer = this.getInitializer().clone();
-    	if(this.getIncrement() != null) increment = this.getIncrement().clone();
-    	if(this.getCondition() != null) condition = this.getCondition().clone();
-    	if(this.getBody() != null) body = this.getBody().clone();
+    	if(this.getInitializer() != null) initializer = this.getInitializer().clone(clone);
+    	if(this.getIncrement() != null) increment = this.getIncrement().clone(clone);
+    	if(this.getCondition() != null) condition = this.getCondition().clone(clone);
+    	if(this.getBody() != null) body = this.getBody().clone(clone);
 
     	clone.setInitializer(initializer);
     	clone.setIncrement(increment);

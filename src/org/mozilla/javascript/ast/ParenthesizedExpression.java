@@ -48,15 +48,16 @@ public class ParenthesizedExpression extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	ParenthesizedExpression clone = (ParenthesizedExpression)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	AstNode expression = null;
 
-    	if(this.getExpression() != null) expression = this.getExpression().clone();
+    	if(this.getExpression() != null) expression = this.getExpression().clone(clone);
 
     	clone.setExpression(expression);
     	

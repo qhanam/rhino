@@ -43,19 +43,20 @@ public class ForInLoop extends Loop {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	ForInLoop clone = (ForInLoop)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	AstNode iterated = null;
     	AstNode iterator = null;
     	AstNode body = null;
 
-    	if(this.getIteratedObject() != null) iterated = this.getIteratedObject().clone();
-    	if(this.getIterator() != null) iterator = this.getIterator().clone();
-    	if(this.getBody() != null) body = this.getBody().clone();
+    	if(this.getIteratedObject() != null) iterated = this.getIteratedObject().clone(clone);
+    	if(this.getIterator() != null) iterator = this.getIterator().clone(clone);
+    	if(this.getBody() != null) body = this.getBody().clone(clone);
 
     	clone.setIteratedObject(iterated);
     	clone.setIterator(iterator);

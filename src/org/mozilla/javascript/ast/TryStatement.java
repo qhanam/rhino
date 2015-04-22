@@ -56,19 +56,21 @@ public class TryStatement extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	TryStatement clone = new TryStatement();
+    	clone.setParent(parent);
+    	clone.setLineno(this.getLineno());
     	
     	/* Clone the children. */
     	AstNode tryBlock = null;
     	List<CatchClause> catchClauses = new LinkedList<CatchClause>();
     	AstNode finallyBlock = null;
 
-    	if(this.getTryBlock() != null) tryBlock = this.getTryBlock().clone();
-    	if(this.getFinallyBlock() != null) finallyBlock = this.getFinallyBlock().clone();
-    	for(CatchClause catchClause : this.getCatchClauses()) catchClauses.add((CatchClause)catchClause.clone());
+    	if(this.getTryBlock() != null) tryBlock = this.getTryBlock().clone(clone);
+    	if(this.getFinallyBlock() != null) finallyBlock = this.getFinallyBlock().clone(clone);
+    	for(CatchClause catchClause : this.getCatchClauses()) catchClauses.add((CatchClause)catchClause.clone(clone));
 
     	clone.setTryBlock(tryBlock);
     	clone.setFinallyBlock(finallyBlock);

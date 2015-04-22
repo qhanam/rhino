@@ -45,19 +45,23 @@ public class IfStatement extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	IfStatement clone = (IfStatement)super.clone();
+    	clone.setParent(parent);
+    	if(parent == null) {
+    		System.out.println("PARENT IS NULL");
+    	}
     	
     	/* Clone the children. */
     	AstNode condition = null;
     	AstNode then = null;
     	AstNode els = null;
 
-    	if(this.getCondition() != null) condition = this.getCondition().clone();
-    	if(this.getThenPart() != null) then = this.getThenPart().clone();
-    	if(this.getElsePart() != null) els = this.getElsePart().clone();
+    	if(this.getCondition() != null) condition = this.getCondition().clone(clone);
+    	if(this.getThenPart() != null) then = this.getThenPart().clone(clone);
+    	if(this.getElsePart() != null) els = this.getElsePart().clone(clone);
 
     	clone.setCondition(condition);
     	clone.setThenPart(then);

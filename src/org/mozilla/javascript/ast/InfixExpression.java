@@ -62,14 +62,15 @@ public class InfixExpression extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	InfixExpression clone = (InfixExpression)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
-    	AstNode left = this.getLeft().clone();
-    	AstNode right = this.getRight().clone();
+    	AstNode left = this.getLeft().clone(clone);
+    	AstNode right = this.getRight().clone(clone);
 
     	clone.setLeft(left);
     	clone.setRight(right);

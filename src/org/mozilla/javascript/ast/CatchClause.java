@@ -53,19 +53,20 @@ public class CatchClause extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	CatchClause clone = (CatchClause)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	Block body = null;
     	AstNode condition = null;
     	Name varName = null;
 
-    	if(this.getBody() != null) body = (Block)this.getBody().clone();
-    	if(this.getCatchCondition() != null) condition = this.getCatchCondition().clone();
-    	if(this.getVarName() != null) varName = (Name)this.getVarName().clone();
+    	if(this.getBody() != null) body = (Block)this.getBody().clone(clone);
+    	if(this.getCatchCondition() != null) condition = this.getCatchCondition().clone(clone);
+    	if(this.getVarName() != null) varName = (Name)this.getVarName().clone(clone);
 
     	clone.setBody(body);
     	clone.setCatchCondition(condition);

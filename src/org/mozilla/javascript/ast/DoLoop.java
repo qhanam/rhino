@@ -40,17 +40,18 @@ public class DoLoop extends Loop {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	DoLoop clone = (DoLoop)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	AstNode condition = null;
     	AstNode body = null;
 
-    	if(this.getCondition() != null) condition = this.getCondition().clone();
-    	if(this.getBody() != null) body = this.getBody().clone();
+    	if(this.getCondition() != null) condition = this.getCondition().clone(clone);
+    	if(this.getBody() != null) body = this.getBody().clone(clone);
 
     	clone.setCondition(condition);
     	clone.setBody(body);

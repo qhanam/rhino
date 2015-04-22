@@ -51,19 +51,20 @@ public class ConditionalExpression extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	ConditionalExpression clone = (ConditionalExpression)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	AstNode test = null;
     	AstNode falseEx = null;
     	AstNode trueEx = null;
 
-    	if(this.getTestExpression() != null) test = this.getTestExpression().clone();
-    	if(this.getFalseExpression() != null) falseEx = this.getFalseExpression().clone();
-    	if(this.getTrueExpression() != null) trueEx = this.getTrueExpression().clone();
+    	if(this.getTestExpression() != null) test = this.getTestExpression().clone(clone);
+    	if(this.getFalseExpression() != null) falseEx = this.getFalseExpression().clone(clone);
+    	if(this.getTrueExpression() != null) trueEx = this.getTrueExpression().clone(clone);
 
     	clone.setTestExpression(test);
     	clone.setFalseExpression(falseEx);

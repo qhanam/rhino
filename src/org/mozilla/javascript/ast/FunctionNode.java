@@ -108,23 +108,22 @@ public class FunctionNode extends ScriptNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	FunctionNode clone = new FunctionNode();
+    	clone.setParent(parent);
+    	clone.setLineno(this.getLineno());
     	
     	/* Clone the children. */
-    	Name name = (Name)this.getFunctionName().clone();
+    	Name name = null;
+    	if(this.getFunctionName() != null) name = (Name)this.getFunctionName().clone(clone);
     	List<AstNode> parameters = new LinkedList<AstNode>();
     	for(AstNode param : this.getParams()) {
-    		AstNode paramClone = param.clone();
+    		AstNode paramClone = param.clone(clone);
     		parameters.add(paramClone);
-
-            if(param == paramClone) {
-                System.out.println("Assertion Failed");
-            }
     	}
-    	AstNode body = this.getBody().clone();
+    	AstNode body = this.getBody().clone(clone);
 
     	clone.setFunctionName(name);
     	clone.setParams(parameters);

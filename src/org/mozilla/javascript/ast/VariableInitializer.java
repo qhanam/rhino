@@ -31,17 +31,18 @@ public class VariableInitializer extends AstNode {
      * @throws CloneNotSupportedException 
      */
     @Override
-    public AstNode clone() throws CloneNotSupportedException {
+    public AstNode clone(AstNode parent) {
     	
     	/* Get the shallow clone. */
     	VariableInitializer clone = (VariableInitializer)super.clone();
+    	clone.setParent(parent);
     	
     	/* Clone the children. */
     	AstNode initializer = null;
     	AstNode target = null;
 
-    	if(this.getInitializer() != null) initializer = this.getInitializer().clone();
-    	if(this.getTarget() != null) target = this.getTarget().clone();
+    	if(this.getInitializer() != null) initializer = this.getInitializer().clone(clone);
+    	if(this.getTarget() != null) target = this.getTarget().clone(clone);
 
     	clone.setInitializer(initializer);
     	clone.setTarget(target);
