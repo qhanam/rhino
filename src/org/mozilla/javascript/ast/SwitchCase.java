@@ -64,7 +64,7 @@ public class SwitchCase extends AstNode {
     	List<AstNode> statements = new LinkedList<AstNode>();
     	AstNode expression = null;
 
-    	for(AstNode statement : this.getStatements()) statements.add(statement.clone(clone));
+    	if(this.getStatements() != null) for(AstNode statement : this.getStatements()) statements.add(statement.clone(clone));
     	if(this.getExpression() != null) expression = this.getExpression().clone(clone);
 
     	clone.setStatements(statements);
