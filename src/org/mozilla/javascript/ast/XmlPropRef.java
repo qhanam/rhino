@@ -88,4 +88,9 @@ public class XmlPropRef extends XmlRef {
             propName.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

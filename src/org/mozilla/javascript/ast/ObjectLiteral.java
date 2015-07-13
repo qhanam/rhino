@@ -157,4 +157,9 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
             }
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

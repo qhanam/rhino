@@ -203,4 +203,9 @@ public class CatchClause extends AstNode {
             body.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

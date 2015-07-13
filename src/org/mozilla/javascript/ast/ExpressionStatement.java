@@ -140,4 +140,9 @@ public class ExpressionStatement extends AstNode {
             expr.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return true;
+	}
 }

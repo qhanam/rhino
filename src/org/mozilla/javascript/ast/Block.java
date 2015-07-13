@@ -87,4 +87,9 @@ public class Block extends AstNode {
             }
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

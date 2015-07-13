@@ -215,4 +215,9 @@ public class IfStatement extends AstNode {
             }
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return true;
+	}
 }

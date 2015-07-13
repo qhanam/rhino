@@ -136,4 +136,9 @@ public class XmlElemRef extends XmlRef {
             indexExpr.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

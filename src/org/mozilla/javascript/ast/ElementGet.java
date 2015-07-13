@@ -162,4 +162,9 @@ public class ElementGet extends AstNode {
             element.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

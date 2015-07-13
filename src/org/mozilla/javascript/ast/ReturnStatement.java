@@ -98,4 +98,9 @@ public class ReturnStatement extends AstNode {
             returnValue.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return true;
+	}
 }

@@ -133,4 +133,9 @@ public class LabeledStatement extends AstNode {
             statement.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return true;
+	}
 }

@@ -99,4 +99,9 @@ public class Comment extends AstNode {
     public void visit(NodeVisitor v) {
         v.visit(this);
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

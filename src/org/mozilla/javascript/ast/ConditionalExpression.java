@@ -194,4 +194,9 @@ public class ConditionalExpression extends AstNode {
             falseExpression.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

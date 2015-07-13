@@ -158,4 +158,9 @@ public class WithStatement extends AstNode {
             statement.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return true;
+	}
 }

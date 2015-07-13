@@ -98,4 +98,9 @@ public class ParenthesizedExpression extends AstNode {
             expression.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

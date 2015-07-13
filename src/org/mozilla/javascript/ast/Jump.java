@@ -129,4 +129,11 @@ public class Jump extends AstNode {
     public String toSource(int depth) {
         throw new UnsupportedOperationException(this.toString());
     }
+
+	@Override
+	public boolean isStatement() {
+		/* Subclasses include statements: BreakStatement, ContinueStatement, 
+		 * Label, Scope (loops, functions and script) and SwitchStatement. */
+		return true;
+	}
 }

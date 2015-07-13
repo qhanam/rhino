@@ -190,4 +190,9 @@ public class FunctionCall extends AstNode {
             }
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

@@ -175,4 +175,9 @@ public class UnaryExpression extends AstNode {
             operand.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

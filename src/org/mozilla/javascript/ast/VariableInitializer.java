@@ -149,4 +149,9 @@ public class VariableInitializer extends AstNode {
             }
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

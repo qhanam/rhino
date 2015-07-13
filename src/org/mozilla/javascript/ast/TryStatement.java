@@ -196,4 +196,9 @@ public class TryStatement extends AstNode {
             }
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return true;
+	}
 }

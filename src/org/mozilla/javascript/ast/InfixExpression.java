@@ -205,4 +205,9 @@ public class InfixExpression extends AstNode {
             right.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

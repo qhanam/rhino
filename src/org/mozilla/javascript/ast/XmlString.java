@@ -59,4 +59,9 @@ public class XmlString extends XmlFragment {
     public void visit(NodeVisitor v) {
         v.visit(this);
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

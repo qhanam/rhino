@@ -178,4 +178,9 @@ public class SwitchCase extends AstNode {
             }
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }

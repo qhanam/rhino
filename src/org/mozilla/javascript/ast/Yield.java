@@ -72,4 +72,9 @@ public class Yield extends AstNode {
             value.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return true;
+	}
 }

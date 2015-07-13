@@ -108,4 +108,9 @@ public class ThrowStatement extends AstNode {
             expression.visit(v);
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return true;
+	}
 }

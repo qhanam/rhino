@@ -87,4 +87,9 @@ public class XmlLiteral extends AstNode {
             }
         }
     }
+
+	@Override
+	public boolean isStatement() {
+		return false;
+	}
 }
