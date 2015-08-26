@@ -35,20 +35,21 @@ public class ForInLoop extends Loop {
 
     public ForInLoop(int pos, int len) {
         super(pos, len);
-    }    
-    
+    }
+
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	ForInLoop clone = (ForInLoop)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode iterated = null;
     	AstNode iterator = null;
@@ -61,7 +62,7 @@ public class ForInLoop extends Loop {
     	clone.setIteratedObject(iterated);
     	clone.setIterator(iterator);
     	clone.setBody(body);
-    	
+
     	return clone;
 
     }

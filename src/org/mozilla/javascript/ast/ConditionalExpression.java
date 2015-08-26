@@ -44,19 +44,20 @@ public class ConditionalExpression extends AstNode {
     public ConditionalExpression(int pos, int len) {
         super(pos, len);
     }
-    
+
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	ConditionalExpression clone = (ConditionalExpression)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode test = null;
     	AstNode falseEx = null;
@@ -69,7 +70,7 @@ public class ConditionalExpression extends AstNode {
     	clone.setTestExpression(test);
     	clone.setFalseExpression(falseEx);
     	clone.setTrueExpression(trueEx);
-    	
+
     	return clone;
 
     }

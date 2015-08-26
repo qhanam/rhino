@@ -41,26 +41,27 @@ public class ParenthesizedExpression extends AstNode {
         super(pos, len);
         setExpression(expr);
     }
-    
+
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	ParenthesizedExpression clone = (ParenthesizedExpression)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode expression = null;
 
     	if(this.getExpression() != null) expression = this.getExpression().clone(clone);
-
     	clone.setExpression(expression);
-    	
+    	if(expression != null) expression.setParent(clone);
+
     	return clone;
 
     }

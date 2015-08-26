@@ -6,15 +6,15 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.Token;
 
 /**
  * A JavaScript function declaration or expression.<p>
@@ -103,18 +103,19 @@ public class FunctionNode extends ScriptNode {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	FunctionNode clone = new FunctionNode();
     	clone.setParent(parent);
     	clone.setLineno(this.getLineno());
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	Name name = null;
     	if(this.getFunctionName() != null) name = (Name)this.getFunctionName().clone(clone);
@@ -128,7 +129,7 @@ public class FunctionNode extends ScriptNode {
     	clone.setFunctionName(name);
     	clone.setParams(parameters);
     	clone.setBody(body);
-    	
+
     	return clone;
 
     }
@@ -139,14 +140,14 @@ public class FunctionNode extends ScriptNode {
     @Override
     public String getCFGLabel() {
     	String label = this.getName() + "(";
-    	
+
     	for(AstNode param : this.getParams()) {
     		if(label.charAt(label.length() - 1) != '(') label += ",";
     		label += param.toSource();
     	}
-    	
+
     	label += ")";
-    		
+
     	return label;
     }
 

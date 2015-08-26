@@ -37,17 +37,18 @@ public class ForLoop extends Loop {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	ForLoop clone = (ForLoop)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode initializer = null;
     	AstNode increment = null;
@@ -63,7 +64,7 @@ public class ForLoop extends Loop {
     	clone.setIncrement(increment);
     	clone.setCondition(condition);
     	clone.setBody(body);
-    	
+
     	return clone;
 
     }

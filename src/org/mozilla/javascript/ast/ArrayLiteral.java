@@ -6,12 +6,12 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.mozilla.javascript.Token;
 
 /**
  * AST node for an Array literal.  The elements list will always be
@@ -55,26 +55,27 @@ public class ArrayLiteral extends AstNode implements DestructuringForm {
     public ArrayLiteral(int pos, int len) {
         super(pos, len);
     }
-    
+
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	ArrayLiteral clone = new ArrayLiteral();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	List<AstNode> elements = new LinkedList<AstNode>();
 
     	for(AstNode element : this.getElements()) elements.add(element.clone(clone));
 
     	clone.setElements(elements);
-    	
+
     	return clone;
 
     }
@@ -177,7 +178,8 @@ public class ArrayLiteral extends AstNode implements DestructuringForm {
      * in a context such as {@code for ([a, b] in ...)} where it's the
      * target of a destructuring assignment.
      */
-    public void setIsDestructuring(boolean destructuring) {
+    @Override
+	public void setIsDestructuring(boolean destructuring) {
         isDestructuring = destructuring;
     }
 
@@ -186,7 +188,8 @@ public class ArrayLiteral extends AstNode implements DestructuringForm {
      * a function parameter, the target of a variable initializer, the
      * iterator of a for..in loop, etc.
      */
-    public boolean isDestructuring() {
+    @Override
+	public boolean isDestructuring() {
         return isDestructuring;
     }
 

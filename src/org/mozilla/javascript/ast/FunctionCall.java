@@ -6,12 +6,12 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.mozilla.javascript.Token;
 
 /**
  * AST node for a function call.  Node type is {@link Token#CALL}.<p>
@@ -42,19 +42,20 @@ public class FunctionCall extends AstNode {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Create a new function call. We can't make a shallow clone because
     	 * .setArguments will set both the original and the clone's args. */
     	FunctionCall clone = new FunctionCall();
     	clone.setParent(clone);
     	clone.setLineno(this.getLineno());
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode target = null;
     	List<AstNode> arguments = new LinkedList<AstNode>();
@@ -64,7 +65,7 @@ public class FunctionCall extends AstNode {
 
     	clone.setTarget(target);
     	clone.setArguments(arguments);
-    	
+
     	return clone;
 
     }

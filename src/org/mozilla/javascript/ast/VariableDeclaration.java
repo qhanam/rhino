@@ -6,11 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.mozilla.javascript.Token;
 
 /**
  * A list of one or more var, const or let declarations.
@@ -46,26 +46,27 @@ public class VariableDeclaration extends AstNode {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	VariableDeclaration clone = new VariableDeclaration();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	List<VariableInitializer> variables = new LinkedList<VariableInitializer>();
-    	
+
     	for(AstNode variable : this.getVariables()) variables.add((VariableInitializer)variable.clone(clone));
-    	
+
     	clone.setIsStatement(this.isStatement());
 
     	clone.setVariables(variables);
-    	
+
     	return clone;
 
     }
@@ -139,7 +140,8 @@ public class VariableDeclaration extends AstNode {
     /**
      * Returns true if this node represents a statement.
      */
-    public boolean isStatement() {
+    @Override
+	public boolean isStatement() {
         return isStatement;
     }
 

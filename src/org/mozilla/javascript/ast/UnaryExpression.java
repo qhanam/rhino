@@ -72,24 +72,25 @@ public class UnaryExpression extends AstNode {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	UnaryExpression clone = (UnaryExpression)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode operand = null;
 
     	if(this.getOperand() != null) operand = this.getOperand().clone(clone);
-
     	clone.setOperand(operand);
-    	
+    	if(operand != null) operand.setParent(clone);
+
     	return clone;
 
     }

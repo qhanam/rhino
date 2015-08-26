@@ -6,11 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Token;
-
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.Token;
 
 /**
  * Node for the root of a parse tree.  It contains the statements and functions
@@ -39,26 +39,27 @@ public class AstRoot extends ScriptNode {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	AstRoot clone = (AstRoot)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	clone.removeChildren();
-    	
+
     	/* Clone the children and add them. */
     	for(Node c : this) {
     		AstNode child = (AstNode) c;
     		clone.addChild(child.clone(clone));
     	}
-    	
+
     	return clone;
 
     }
@@ -170,7 +171,8 @@ public class AstRoot extends ScriptNode {
      */
     public void checkParentLinks() {
         this.visit(new NodeVisitor() {
-            public boolean visit(AstNode node) {
+            @Override
+			public boolean visit(AstNode node) {
                 int type = node.getType();
                 if (type == Token.SCRIPT)
                     return true;

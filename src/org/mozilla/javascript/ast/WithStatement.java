@@ -35,19 +35,20 @@ public class WithStatement extends AstNode {
     public WithStatement(int pos, int len) {
         super(pos, len);
     }
-    
+
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	WithStatement clone = (WithStatement)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode expression = null;
     	AstNode statement = null;
@@ -57,7 +58,7 @@ public class WithStatement extends AstNode {
 
     	clone.setExpression(expression);
     	clone.setStatement(statement);
-    	
+
     	return clone;
 
     }

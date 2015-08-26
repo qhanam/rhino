@@ -6,18 +6,18 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Kit;
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Token;
-
-import ca.ubc.ece.salt.gumtree.ast.ClassifiedASTNode;
-
 import java.io.InvalidClassException;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.mozilla.javascript.Kit;
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.Token;
+
+import ca.ubc.ece.salt.gumtree.ast.ClassifiedASTNode;
 
 /**
  * Base class for AST node types.  The goal of the AST is to represent the
@@ -69,29 +69,31 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     protected int position = -1;
     protected int length = 1;
     protected AstNode parent;
-    
+
     /** The change type from AST differencing. **/
     protected ChangeType changeType;
-    
+
     /** The source or destination node that this node maps to. **/
     protected AstNode mappedNode;
-    
+
     /**
      * @param changeType The change applied to this node from AST differencing.
      */
-    public void setChangeType(ChangeType changeType) {
+    @Override
+	public void setChangeType(ChangeType changeType) {
     	this.changeType = changeType;
     }
-    
+
     /**
      * @return The change applied to this node from AST differencing.
      */
-    public ChangeType getChangeType() {
+    @Override
+	public ChangeType getChangeType() {
     	return this.changeType;
     }
-    
+
     /**
-     * Clones the AstNode. This covers the following AstNode types (i.e., 
+     * Clones the AstNode. This covers the following AstNode types (i.e.,
      * anything that doesn't have children):
      * 	- Name
      * 	- Break
@@ -105,11 +107,14 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      *  - RegExpLiteral
      *  - StringLiteral
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
-    public AstNode clone() {
+    @Override
+	public AstNode clone() {
         try {
-			return (AstNode) super.clone();
+			AstNode clone = (AstNode) super.clone();
+			clone.changeType = this.changeType;
+			return clone;
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}
@@ -122,40 +127,44 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     	try {
 			clone = (AstNode)super.clone();
 		} catch (CloneNotSupportedException e) { }
-    	
+
     	clone.setParent(parent);
     	return clone;
-    	
+
     }
 
     /**
      * @param node The source or destination node to map this node to.
      */
-    public void map(ClassifiedASTNode node) throws InvalidClassException {
+    @Override
+	public void map(ClassifiedASTNode node) throws InvalidClassException {
     	if(!(node instanceof AstNode)) throw new InvalidClassException("The ClassifiedASTNode is not an AstNode.");
     	this.mappedNode = (AstNode)node;
     }
-    
+
     /**
      * @return The source or destination node that maps to this node or null
      * 		   if this node does not have a mapping (which is the case for
      * 		   inserted and removed nodes).
      */
-    public ClassifiedASTNode getMapping() {
+    @Override
+	public ClassifiedASTNode getMapping() {
     	return this.mappedNode;
     }
 
     /**
      * @return true if the AST node is an empty statement.
      */
-    public boolean isEmpty() {
+    @Override
+	public boolean isEmpty() {
     	return this.type == Token.EMPTY;
     }
 
     /**
      * @return the type of AST node as a string.
      */
-    public String getTypeName() {
+    @Override
+	public String getTypeName() {
 
         String name;
 
@@ -167,13 +176,14 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
         }
 
         return name;
-    	
+
     }
 
     /**
      * @return the CFG node or edge label (the source code).
      */
-    public String getCFGLabel() {
+    @Override
+	public String getCFGLabel() {
     	return this.toSource().replace("\n", "").replace("\"", "\\\"");
     }
 
@@ -237,7 +247,8 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
          * relative to their parent, so this comparator is only meaningful for
          * comparing siblings.
          */
-        public int compare(AstNode n1, AstNode n2) {
+        @Override
+		public int compare(AstNode n1, AstNode n2) {
             return n1.position - n2.position;
         }
     }
@@ -465,7 +476,8 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     public abstract void visit(NodeVisitor visitor);
 
     // subclasses with potential side effects should override this
-    public boolean hasSideEffects()
+    @Override
+	public boolean hasSideEffects()
     {
         switch (getType()) {
           case Token.ASSIGN:
@@ -631,7 +643,8 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      * {@code other}'s length.  If the lengths are equal, sorts abitrarily
      * on hashcode unless the nodes are the same per {@link #equals}.
      */
-    public int compareTo(AstNode other) {
+    @Override
+	public int compareTo(AstNode other) {
         if (this.equals(other)) return 0;
         int abs1 = this.getAbsolutePosition();
         int abs2 = other.getAbsolutePosition();
@@ -659,7 +672,8 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
         public DebugPrintVisitor(StringBuilder buf) {
             buffer = buf;
         }
-        public String toString() {
+        @Override
+		public String toString() {
             return buffer.toString();
         }
         private String makeIndent(int depth) {
@@ -669,7 +683,8 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
             }
             return sb.toString();
         }
-        public boolean visit(AstNode node) {
+        @Override
+		public boolean visit(AstNode node) {
             int tt = node.getType();
             String name = Token.typeToName(tt);
             buffer.append(node.getAbsolutePosition()).append("\t");
@@ -710,5 +725,5 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
         visit(dpv);
         return dpv.toString();
     }
-    
+
 }

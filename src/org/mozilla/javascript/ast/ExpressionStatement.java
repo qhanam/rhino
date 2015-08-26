@@ -22,21 +22,22 @@ public class ExpressionStatement extends AstNode {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	ExpressionStatement clone = (ExpressionStatement)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode expression = this.getExpression().clone(clone);
     	clone.setExpression(expression);
-    	
+
     	return clone;
 
     }

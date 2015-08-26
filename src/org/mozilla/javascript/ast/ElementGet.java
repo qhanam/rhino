@@ -45,19 +45,20 @@ public class ElementGet extends AstNode {
         setTarget(target);
         setElement(element);
     }
-    
+
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	ElementGet clone = (ElementGet)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	AstNode element = null;
     	AstNode target = null;
@@ -67,7 +68,7 @@ public class ElementGet extends AstNode {
 
     	clone.setElement(element);
     	clone.setTarget(target);
-    	
+
     	return clone;
 
     }

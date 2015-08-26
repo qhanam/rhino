@@ -6,12 +6,12 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.mozilla.javascript.Token;
 
 /**
  * Switch statement AST node type.
@@ -58,18 +58,19 @@ public class SwitchStatement extends Jump {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	SwitchStatement clone = new SwitchStatement();
     	clone.setParent(parent);
     	clone.setLineno(this.getLineno());
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	List<SwitchCase> cases = new LinkedList<SwitchCase>();
     	AstNode expression = null;
@@ -79,7 +80,7 @@ public class SwitchStatement extends Jump {
 
     	clone.setCases(cases);
     	clone.setExpression(expression);
-    	
+
     	return clone;
 
     }

@@ -6,14 +6,14 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.Token;
 
 /**
  * Represents a scope in the lexical scope chain.  Base type for
@@ -45,26 +45,27 @@ public class Scope extends Jump {
     }
 
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	Scope clone = (Scope)super.clone();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	clone.removeChildren();
-    	
+
     	/* Clone the children and add them. */
     	for(Node c : this) {
     		AstNode child = (AstNode) c;
     		clone.addChild(child.clone(clone));
     	}
-    	
+
     	return clone;
 
     }

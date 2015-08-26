@@ -6,11 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.mozilla.javascript.Token;
 
 /**
  * Switch-case AST node type.  The switch case is always part of a
@@ -46,20 +46,21 @@ public class SwitchCase extends AstNode {
 
     public SwitchCase(int pos, int len) {
         super(pos, len);
-    }    
-    
+    }
+
     /**
-     * Clones the AstNode.     
+     * Clones the AstNode.
      * @return The clone of the AstNode.
-     * @throws CloneNotSupportedException 
+     * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
-    	
+
     	/* Get the shallow clone. */
     	SwitchCase clone = new SwitchCase();
     	clone.setParent(parent);
-    	
+    	clone.changeType = this.changeType;
+
     	/* Clone the children. */
     	List<AstNode> statements = new LinkedList<AstNode>();
     	AstNode expression = null;
@@ -69,7 +70,7 @@ public class SwitchCase extends AstNode {
 
     	clone.setStatements(statements);
     	clone.setExpression(expression);
-    	
+
     	return clone;
 
     }
