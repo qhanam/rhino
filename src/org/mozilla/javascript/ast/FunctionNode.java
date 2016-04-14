@@ -70,6 +70,11 @@ public class FunctionNode extends ScriptNode {
     private static final List<AstNode> NO_PARAMS =
         Collections.unmodifiableList(new ArrayList<AstNode>());
 
+	/**
+	 * Used to generate unique IDs for anonymous functions.
+	 */
+	private static int anonymousIDGen = 0;
+
     private Name functionName;
     private List<AstNode> params;
     private AstNode body;
@@ -100,6 +105,15 @@ public class FunctionNode extends ScriptNode {
     public FunctionNode(int pos, Name name) {
         super(pos);
         setFunctionName(name);
+    }
+
+    /**
+     * @return A unique ID for an anonymous function.
+     */
+    private synchronized int getAnonymousID() {
+    	int id = FunctionNode.anonymousIDGen;
+    	FunctionNode.anonymousIDGen++;
+    	return id;
     }
 
     /**
@@ -170,11 +184,15 @@ public class FunctionNode extends ScriptNode {
     }
 
     /**
-     * Returns the function name as a string
+     * Returns the function name as a string. If the function is anonymous and
+     * has no name, create a name for it and give it a unique ID.
      * @return the function name, {@code ""} if anonymous
      */
     public String getName() {
-        return functionName != null ? functionName.getIdentifier() : "";
+    	if(functionName == null) {
+    		this.setFunctionName(new Name(0, "~anon" + this.getAnonymousID() + "~"));
+    	}
+        return functionName.getIdentifier();
     }
 
     /**

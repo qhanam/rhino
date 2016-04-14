@@ -6,18 +6,24 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.Token;
 
 /**
  * Base type for {@link AstRoot} and {@link FunctionNode} nodes, which need to
  * collect much of the same information.
  */
 public class ScriptNode extends Scope {
+
+	/**
+	 * An identity that persists between versions.
+	 * @author qhanam
+	 */
+	private String identity = null;
 
     private int encodedSourceStart = -1;
     private int encodedSourceEnd = -1;
@@ -48,6 +54,20 @@ public class ScriptNode extends Scope {
 
     public ScriptNode(int pos) {
         super(pos);
+    }
+
+    /**
+     * Set the identity for the script.
+     */
+    public void setIdentity(String identity) {
+    	this.identity = identity;
+    }
+
+    /**
+     * @return the identity for the script.
+     */
+    public String getIdentity() {
+    	return this.identity;
     }
 
     /**

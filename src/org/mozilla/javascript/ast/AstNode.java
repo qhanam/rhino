@@ -76,6 +76,35 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     /** The source or destination node that this node maps to. **/
     protected AstNode mappedNode;
 
+    /** A unique ID for the AstNode (same for source and destination nodes) **/
+    protected Integer ID;
+
+    /**
+     * The version of the node relative to the commit. Can be source or
+     * destination node.
+     */
+    protected Version version;
+
+    @Override
+    public void setID(Integer ID) {
+    	this.ID = ID;
+    }
+
+    @Override
+	public Integer getID() {
+    	return this.ID;
+    }
+
+    @Override
+    public void setVersion(Version version) {
+    	this.version = version;
+    }
+
+    @Override
+    public Version getVersion() {
+    	return this.version;
+    }
+
     /**
      * @param changeType The change applied to this node from AST differencing.
      */
@@ -164,7 +193,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      * @return the type of AST node as a string.
      */
     @Override
-	public String getTypeName() {
+	public String getASTNodeType() {
 
         String name;
 
