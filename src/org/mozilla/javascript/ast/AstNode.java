@@ -66,22 +66,38 @@ import ca.ubc.ece.salt.gumtree.ast.ClassifiedASTNode;
  */
 public abstract class AstNode extends Node implements Comparable<AstNode>, ClassifiedASTNode, Cloneable{
 
+	/**
+	 * The fixed (pre-computed) absolute position of the node in the AST.
+	 * @author qhanam
+	 */
+	protected int fixedPosition = -1;
+
     protected int position = -1;
     protected int length = 1;
     protected AstNode parent;
 
-    /** The change type from AST differencing. **/
+    /** 
+     * The change type from AST differencing. 
+     * @author qhanam
+     **/
     protected ChangeType changeType;
 
-    /** The source or destination node that this node maps to. **/
+    /** 
+     * The source or destination node that this node maps to. 
+     * @author qhanam
+     */
     protected AstNode mappedNode;
 
-    /** A unique ID for the AstNode (same for source and destination nodes) **/
+    /** 
+     * A unique ID for the AstNode (same for source and destination nodes) 
+     * @author qhanam
+     **/
     protected Integer ID;
 
     /**
      * The version of the node relative to the commit. Can be source or
      * destination node.
+     * @author qhanam
      */
     protected Version version;
 
@@ -107,6 +123,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
 
     /**
      * @param changeType The change applied to this node from AST differencing.
+     * @author qhanam
      */
     @Override
 	public void setChangeType(ChangeType changeType) {
@@ -115,10 +132,32 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
 
     /**
      * @return The change applied to this node from AST differencing.
+     * @author qhanam
      */
     @Override
 	public ChangeType getChangeType() {
     	return this.changeType;
+    }
+    
+    @Override
+    public boolean isFunction() {
+    	return this instanceof FunctionNode;
+    }
+    
+    @Override
+    public void setFixedPosition(int fixedPosition) {
+    	this.fixedPosition = fixedPosition;
+    }
+    
+    @Override
+    public int getFixedPosition() {
+    	if(fixedPosition < 0) return this.getAbsolutePosition();
+    	return fixedPosition;
+    }
+    
+    @Override
+    public String toString() {
+    	return this.changeType.toString() + "\n" + this.toSource();
     }
 
     /**
@@ -137,18 +176,23 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      *  - StringLiteral
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
+     * @author qhanam
      */
     @Override
 	public AstNode clone() {
         try {
 			AstNode clone = (AstNode) super.clone();
 			clone.changeType = this.changeType;
+			clone.fixedPosition = this.fixedPosition;
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}
     }
 
+    /**
+     * @author qhanam
+     */
     public AstNode clone(AstNode parent) {
 
     	AstNode clone = null;
@@ -163,6 +207,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     }
 
     /**
+     * @author qhanam
      * @param node The source or destination node to map this node to.
      */
     @Override
@@ -172,6 +217,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     }
 
     /**
+     * @author qhanam
      * @return The source or destination node that maps to this node or null
      * 		   if this node does not have a mapping (which is the case for
      * 		   inserted and removed nodes).
