@@ -46,6 +46,7 @@ public class Block extends AstNode {
     	Block clone = (Block)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = this.fixedPosition;
 
     	/* Clone the children. */
     	clone.removeChildren();

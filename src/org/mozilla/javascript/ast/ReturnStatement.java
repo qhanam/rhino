@@ -50,6 +50,7 @@ public class ReturnStatement extends AstNode {
     	ReturnStatement clone = (ReturnStatement)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = fixedPosition;
 
     	/* Clone the children. */
     	AstNode returnValue = null;

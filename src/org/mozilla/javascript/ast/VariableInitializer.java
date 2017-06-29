@@ -37,6 +37,7 @@ public class VariableInitializer extends AstNode {
     	VariableInitializer clone = (VariableInitializer)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = fixedPosition;
 
     	/* Clone the children. */
     	AstNode initializer = null;

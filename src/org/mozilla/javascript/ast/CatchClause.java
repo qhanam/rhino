@@ -59,6 +59,7 @@ public class CatchClause extends AstNode {
     	CatchClause clone = (CatchClause)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = this.fixedPosition;
 
     	/* Clone the children. */
     	Block body = null;

@@ -57,6 +57,7 @@ public class ConditionalExpression extends AstNode {
     	ConditionalExpression clone = (ConditionalExpression)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = this.fixedPosition;
 
     	/* Clone the children. */
     	AstNode test = null;

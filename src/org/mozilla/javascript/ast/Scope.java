@@ -56,6 +56,7 @@ public class Scope extends Jump {
     	Scope clone = (Scope)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = fixedPosition;
 
     	/* Clone the children. */
     	clone.removeChildren();

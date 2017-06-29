@@ -202,6 +202,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
 		} catch (CloneNotSupportedException e) { }
 
     	clone.setParent(parent);
+    	clone.fixedPosition = fixedPosition;
     	return clone;
 
     }

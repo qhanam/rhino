@@ -45,6 +45,7 @@ public class WhileLoop extends Loop {
     	WhileLoop clone = (WhileLoop)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = fixedPosition;
 
     	/* Clone the children. */
     	AstNode condition = null;

@@ -33,6 +33,7 @@ public class ExpressionStatement extends AstNode {
     	ExpressionStatement clone = (ExpressionStatement)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = fixedPosition;
 
     	/* Clone the children. */
     	AstNode expression = this.getExpression().clone(clone);

@@ -63,6 +63,7 @@ public class TryStatement extends AstNode {
     	clone.setParent(parent);
     	clone.setLineno(this.getLineno());
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = fixedPosition;
 
     	/* Clone the children. */
     	AstNode tryBlock = null;

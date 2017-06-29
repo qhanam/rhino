@@ -55,6 +55,7 @@ public class FunctionCall extends AstNode {
     	clone.setParent(clone);
     	clone.setLineno(this.getLineno());
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = fixedPosition;
 
     	/* Clone the children. */
     	AstNode target = null;

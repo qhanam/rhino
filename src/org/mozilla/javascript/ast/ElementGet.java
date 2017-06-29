@@ -58,6 +58,7 @@ public class ElementGet extends AstNode {
     	ElementGet clone = (ElementGet)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = this.fixedPosition;
 
     	/* Clone the children. */
     	AstNode element = null;

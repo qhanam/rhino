@@ -51,6 +51,7 @@ public class IfStatement extends AstNode {
     	IfStatement clone = (IfStatement)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
+    	clone.fixedPosition = fixedPosition;
 
     	/* Clone the children. */
     	AstNode condition = null;
