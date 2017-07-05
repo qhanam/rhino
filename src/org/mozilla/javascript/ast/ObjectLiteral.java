@@ -66,7 +66,8 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
     	ObjectLiteral clone = new ObjectLiteral();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	List<ObjectProperty> elements = new LinkedList<ObjectProperty>();

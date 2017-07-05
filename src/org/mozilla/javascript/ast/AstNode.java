@@ -184,6 +184,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
 			AstNode clone = (AstNode) super.clone();
 			clone.changeType = this.changeType;
 			clone.fixedPosition = this.fixedPosition;
+			clone.ID = this.ID;
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			return null;

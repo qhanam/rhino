@@ -54,7 +54,8 @@ public class ParenthesizedExpression extends AstNode {
     	ParenthesizedExpression clone = (ParenthesizedExpression)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	AstNode expression = null;

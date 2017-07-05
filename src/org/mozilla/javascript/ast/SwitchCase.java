@@ -60,7 +60,8 @@ public class SwitchCase extends AstNode {
     	SwitchCase clone = new SwitchCase();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	List<AstNode> statements = new LinkedList<AstNode>();

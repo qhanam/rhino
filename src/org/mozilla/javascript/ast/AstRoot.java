@@ -50,7 +50,8 @@ public class AstRoot extends ScriptNode {
     	AstRoot clone = (AstRoot)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	clone.removeChildren();

@@ -57,7 +57,8 @@ public class VariableDeclaration extends AstNode {
     	VariableDeclaration clone = new VariableDeclaration();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	List<VariableInitializer> variables = new LinkedList<VariableInitializer>();

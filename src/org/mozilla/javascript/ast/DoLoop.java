@@ -47,6 +47,7 @@ public class DoLoop extends Loop {
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
     	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	AstNode condition = null;

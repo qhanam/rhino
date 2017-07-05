@@ -68,7 +68,8 @@ public class InfixExpression extends AstNode {
     	InfixExpression clone = (InfixExpression)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	AstNode left = this.getLeft().clone(clone);

@@ -48,7 +48,8 @@ public class ForLoop extends Loop {
     	ForLoop clone = (ForLoop)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	AstNode initializer = null;

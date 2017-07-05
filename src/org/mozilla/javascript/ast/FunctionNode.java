@@ -129,7 +129,8 @@ public class FunctionNode extends ScriptNode {
     	clone.setParent(parent);
     	clone.setLineno(this.getLineno());
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	Name name = null;

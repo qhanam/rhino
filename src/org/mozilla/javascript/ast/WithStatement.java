@@ -48,7 +48,8 @@ public class WithStatement extends AstNode {
     	WithStatement clone = (WithStatement)super.clone();
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
-    	clone.fixedPosition = fixedPosition;
+    	clone.fixedPosition = this.fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	AstNode expression = null;
