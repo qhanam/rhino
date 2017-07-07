@@ -100,6 +100,17 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      * @author qhanam
      */
     protected Version version;
+    
+    /**
+     * Because the analysis is partial, the origin of some values cannot be 
+     * tracked. In these cases, we provide dummy value declarations, which are
+     * expressions which may provide new values. This field tracks which 
+     * {@code AstNodes} provided dummy values during the analysis.
+     * 
+     *	@return {@code true} if this node provides a dummy value declaration,
+     *			{@code false} otherwise.
+     */
+    protected boolean dummy; 
 
     @Override
     public void setID(Integer ID) {
@@ -119,6 +130,16 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     @Override
     public Version getVersion() {
     	return this.version;
+    }
+    
+    @Override 
+    public void setDummy() {
+    	this.dummy  = true;
+    }
+
+    @Override 
+    public boolean isDummy() {
+    	return this.dummy;
     }
 
     /**
