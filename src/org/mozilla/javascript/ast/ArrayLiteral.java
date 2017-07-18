@@ -69,6 +69,7 @@ public class ArrayLiteral extends AstNode implements DestructuringForm {
     	clone.setParent(parent);
     	clone.changeType = this.changeType;
     	clone.fixedPosition = fixedPosition;
+    	clone.ID = this.ID;
 
     	/* Clone the children. */
     	List<AstNode> elements = new LinkedList<AstNode>();
