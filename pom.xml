@@ -36,4 +36,19 @@
     <connection>scm:git:https://github.com/apigee/rhino.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/apigee/rhino.git</developerConnection>
   </scm>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
