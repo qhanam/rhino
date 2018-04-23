@@ -95,7 +95,11 @@ public class InfixExpression extends AstNode {
     		case Token.LE:
     			type = "BinaryExpression";
     			break;
-    		case Token.MOD: // Arithmetic Operators
+    		case Token.ADD: // Arithmetic Operators
+    		case Token.SUB:
+    		case Token.MUL:
+    		case Token.DIV:
+    		case Token.MOD:
     			type = "BinaryExpression";
     			break;
     		case Token.BITAND: // Bitwise Operators
