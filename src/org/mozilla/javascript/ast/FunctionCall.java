@@ -11,6 +11,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -42,6 +47,25 @@ public class FunctionCall extends AstNode {
     }
 
     /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		for(AstNode argument : this.getArguments()) {
+    			arrayBuilder.add(argument.getJsonObject());
+    		}
+    		return factory.createObjectBuilder()
+    				.add("type", "CallExpression")
+    				.add("callee", this.getTarget().getJsonObject())
+    				.add("arguments", arrayBuilder.build())
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
+    }
+
+    /**
      * Clones the AstNode.
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
@@ -52,11 +76,12 @@ public class FunctionCall extends AstNode {
     	/* Create a new function call. We can't make a shallow clone because
     	 * .setArguments will set both the original and the clone's args. */
     	FunctionCall clone = new FunctionCall();
-    	clone.setParent(clone);
+    	clone.setParent(parent);
     	clone.setLineno(this.getLineno());
     	clone.changeType = this.changeType;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
+    	clone.mappedNode = this.mappedNode;
 
     	/* Clone the children. */
     	AstNode target = null;

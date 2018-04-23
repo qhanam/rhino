@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -45,6 +49,84 @@ public class UnaryExpression extends AstNode {
     public UnaryExpression(int operator, int operatorPosition,
                            AstNode operand) {
         this(operator, operatorPosition, operand, false);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		switch(this.getOperator()) {
+    		case Token.ADD:
+				return factory.createObjectBuilder()
+						.add("type", "UnaryExpression")
+						.add("operator", "+")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.NEG:
+				return factory.createObjectBuilder()
+						.add("type", "UnaryExpression")
+						.add("operator", "-")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.NOT:
+				return factory.createObjectBuilder()
+						.add("type", "UnaryExpression")
+						.add("operator", "!")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.INC:
+				return factory.createObjectBuilder()
+						.add("type", "UpdateExpression")
+						.add("operator", "++")
+						.add("prefix", false)
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.DEC:
+				return factory.createObjectBuilder()
+						.add("type", "UpdateExpression")
+						.add("operator", "--")
+						.add("prefix", false)
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.BITNOT:
+				return factory.createObjectBuilder()
+						.add("type", "UnaryExpression")
+						.add("operator", "~")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.TYPEOF:
+    		case Token.TYPEOFNAME:
+				return factory.createObjectBuilder()
+						.add("type", "UnaryExpression")
+						.add("operator", "typeof")
+						.add("prefix", true)
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.DELPROP:
+				return factory.createObjectBuilder()
+						.add("type", "UnaryExpression")
+						.add("operator", "delete")
+						.add("prefix", true)
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.VOID:
+				return factory.createObjectBuilder()
+						.add("type", "UnaryExpression")
+						.add("operator", "void")
+						.add("prefix", true)
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+		default:
+				return factory.createObjectBuilder()
+						.add("type", "UnaryExpression")
+						.add("operator", (String)null)
+						.add("prefix", true)
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		}
     }
 
     /**

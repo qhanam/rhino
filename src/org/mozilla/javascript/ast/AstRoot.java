@@ -9,6 +9,11 @@ package org.mozilla.javascript.ast;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
 
@@ -36,6 +41,25 @@ public class AstRoot extends ScriptNode {
 
     public AstRoot(int pos) {
         super(pos);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		for(Node element : this) {
+    			arrayBuilder.add(((AstNode)element).getJsonObject());
+    		}
+    		return factory.createObjectBuilder()
+    				.add("type", "Program")
+    				.add("body", arrayBuilder.build())
+    				.add("sourceType", "script")
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

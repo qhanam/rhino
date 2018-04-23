@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 /**
  * AST node for an XML-text-only component of an XML literal expression.  This
  * node differs from a {@link StringLiteral} in that it does not have quotes for
@@ -25,6 +29,17 @@ public class XmlString extends XmlFragment {
     public XmlString(int pos, String s) {
         super(pos);
         setXml(s);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		return factory.createObjectBuilder()
+    				.add("type", "XmlElemRef").build();
     }
 
     /**

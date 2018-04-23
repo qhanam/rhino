@@ -13,6 +13,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
 
@@ -114,6 +119,46 @@ public class FunctionNode extends ScriptNode {
     	int id = FunctionNode.anonymousIDGen;
     	FunctionNode.anonymousIDGen++;
     	return id;
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		for(AstNode param : this.getParams()) {
+    			arrayBuilder.add(param.getJsonObject());
+    		}
+    		String type = "";
+    		String name = this.getName();
+    		if(name.isEmpty()) name = null;
+    		switch(this.getFunctionType()) {
+    		case FUNCTION_STATEMENT:
+				return factory.createObjectBuilder()
+						.add("type", "FunctionDeclaration")
+						.add("id", name)
+						.add("params", arrayBuilder.build())
+						.add("generator", this.isGenerator)
+						.add("expression", this.isExpressionClosure)
+						.add("async", false)
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case FUNCTION_EXPRESSION:
+    		case FUNCTION_EXPRESSION_STATEMENT:
+    		default:
+				return factory.createObjectBuilder()
+						.add("type", "FunctionDeclaration")
+						.add("id", name)
+						.add("params", arrayBuilder.build())
+						.add("generator", this.isGenerator)
+						.add("expression", this.isExpressionClosure)
+						.add("async", false)
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		}
     }
 
     /**

@@ -11,6 +11,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -52,6 +57,24 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
 
     public ObjectLiteral(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		for(AstNode property : this.getElements()) {
+    			arrayBuilder.add(property.getJsonObject());
+    		}
+		return factory.createObjectBuilder()
+				.add("type", "ObjectExpression")
+				.add("properties", arrayBuilder.build())
+				.add("change", changeType.toString())
+				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

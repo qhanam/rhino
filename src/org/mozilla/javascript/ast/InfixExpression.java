@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -54,6 +58,129 @@ public class InfixExpression extends AstNode {
         setType(operator);
         setOperatorPosition(operatorPos - left.getPosition());
         setLeftAndRight(left, right);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		String type = null;
+    		String operator = null;
+    		
+    		switch(this.getOperator()) {
+    		case Token.ASSIGN: // Assignment Operators
+    		case Token.ASSIGN_ADD:
+    		case Token.ASSIGN_SUB:
+    		case Token.ASSIGN_MUL:
+    		case Token.ASSIGN_DIV:
+    		case Token.ASSIGN_MOD:
+    		case Token.ASSIGN_LSH:
+    		case Token.ASSIGN_RSH:
+    		case Token.URSH:
+    		case Token.ASSIGN_BITAND:
+    		case Token.ASSIGN_BITXOR:
+    		case Token.ASSIGN_BITOR:
+    			type = "AssignmentExpression";
+    			break;
+    		case Token.EQ: // Comparison Operators
+    		case Token.NE:
+    		case Token.SHEQ:
+    		case Token.SHNE:
+    		case Token.GT:
+    		case Token.GE:
+    		case Token.LT:
+    		case Token.LE:
+    			type = "BinaryExpression";
+    			break;
+    		case Token.MOD: // Arithmetic Operators
+    			type = "BinaryExpression";
+    			break;
+    		case Token.BITAND: // Bitwise Operators
+    		case Token.BITOR:
+    		case Token.BITXOR:
+    		case Token.LSH:
+    		case Token.RSH:
+    			type = "BinaryExpression";
+    			break;
+    		case Token.AND:	// Logical Operators
+    		case Token.OR:
+    			type = "Logical Expression";
+    			break;
+		default:
+			type= "BinaryExpression";
+			break;
+    		}
+
+    		switch(this.getOperator()) {
+    		case Token.ASSIGN: // Assignment Operators
+    			operator = "="; break;
+    		case Token.ASSIGN_ADD:
+    			operator = "+="; break;
+    		case Token.ASSIGN_SUB:
+    			operator = "-="; break;
+    		case Token.ASSIGN_MUL:
+    			operator = "*="; break;
+    		case Token.ASSIGN_DIV:
+    			operator = "/="; break;
+    		case Token.ASSIGN_MOD:
+    			operator = "%="; break;
+    		case Token.ASSIGN_LSH:
+    			operator = "<<="; break;
+    		case Token.ASSIGN_RSH:
+    			operator = ">>="; break;
+    		case Token.URSH:
+    			operator = ">>>="; break;
+    		case Token.ASSIGN_BITAND:
+    			operator = "&="; break;
+    		case Token.ASSIGN_BITXOR:
+    			operator = "^="; break;
+    		case Token.ASSIGN_BITOR:
+    			operator = "|="; break;
+    		case Token.EQ: // Comparison Operators
+    			operator = "=="; break;
+    		case Token.NE:
+    			operator = "!="; break;
+    		case Token.SHEQ:
+    			operator = "==="; break;
+    		case Token.SHNE:
+    			operator = "!=="; break;
+    		case Token.GT:
+    			operator = ">"; break;
+    		case Token.GE:
+    			operator = ">="; break;
+    		case Token.LT:
+    			operator = "<"; break;
+    		case Token.LE:
+    			operator = "<="; break;
+    		case Token.MOD: // Arithmetic Operators
+    			operator = "%"; break;
+    		case Token.BITAND: // Bitwise Operators
+    			operator = "&"; break;
+    		case Token.BITOR:
+    			operator = "|"; break;
+    		case Token.BITXOR:
+    			operator = "^"; break;
+    		case Token.LSH:
+    			operator = "<<"; break;
+    		case Token.RSH:
+    			operator = ">>"; break;
+    		case Token.AND:	// Logical Operators
+    			operator = "&&"; break;
+    		case Token.OR:
+    			type = "Logical Expression";
+    			operator = "||"; break;
+		default:
+			operator = null; break;
+    		}
+
+		return factory.createObjectBuilder()
+				.add("type", type)
+				.add("operator", operator)
+				.add("change", changeType.toString())
+				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

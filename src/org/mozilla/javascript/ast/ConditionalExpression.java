@@ -6,6 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -43,6 +48,22 @@ public class ConditionalExpression extends AstNode {
 
     public ConditionalExpression(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		return factory.createObjectBuilder()
+    				.add("type", "ConditionalExpression")
+    				.add("test", this.getTestExpression().getJsonObject())
+    				.add("consequent", this.getTrueExpression().getJsonObject())
+    				.add("alternate", this.getFalseExpression().getJsonObject())
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

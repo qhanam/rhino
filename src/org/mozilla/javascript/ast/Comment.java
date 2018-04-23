@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -59,6 +63,32 @@ public class Comment extends AstNode {
         commentType = type;
         this.value = value;
     }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		String type = "Block";
+    		switch(this.commentType) {
+    		case LINE:
+    			type = "Line";
+    			break;
+    		case HTML:
+    		case JSDOC:
+    		case BLOCK_COMMENT:
+		default:
+    			type = "Block";
+    		}
+    		return factory.createObjectBuilder()
+    				.add("type", type)
+    				.add("value", this.getValue())
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
+    }
+
 
     /**
      * Returns the comment style

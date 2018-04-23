@@ -11,6 +11,10 @@ import org.mozilla.javascript.Token;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 /**
  * AST node for an E4X (Ecma-357) embedded XML literal.  Node type is
  * {@link Token#XML}.  The parser generates a simple list of strings and
@@ -35,6 +39,17 @@ public class XmlLiteral extends AstNode {
 
     public XmlLiteral(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		return factory.createObjectBuilder()
+    				.add("type", "XmlLiteral").build();
     }
 
     /**

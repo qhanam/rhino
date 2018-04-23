@@ -6,6 +6,12 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
+import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
 
 /**
@@ -42,6 +48,25 @@ public class LetNode extends Scope {
 
     public LetNode(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		for(VariableInitializer initializer : this.getVariables().getVariables()) {
+    			arrayBuilder.add(initializer.getJsonObject());
+    		}
+    		return factory.createObjectBuilder()
+    				.add("type", "VariableDeclaration")
+    				.add("declarations", arrayBuilder.build())
+    				.add("kind", "let")
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

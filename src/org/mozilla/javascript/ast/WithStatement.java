@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -34,6 +38,21 @@ public class WithStatement extends AstNode {
 
     public WithStatement(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		return factory.createObjectBuilder()
+    				.add("type", "WithStatement")
+    				.add("object", this.getExpression().getJsonObject())
+    				.add("body", this.getStatement().getJsonObject())
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

@@ -6,6 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonValue;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -38,6 +43,50 @@ public class KeywordLiteral extends AstNode {
     public KeywordLiteral(int pos, int len, int nodeType) {
         super(pos, len);
         setType(nodeType);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		switch(this.getType()) {
+    		case Token.THIS:
+				return factory.createObjectBuilder()
+						.add("type", "ThisExpression")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.TRUE:
+				return factory.createObjectBuilder()
+						.add("type", "Literal")
+						.add("value", true)
+						.add("raw", "true")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.FALSE:
+				return factory.createObjectBuilder()
+						.add("type", "Literal")
+						.add("value", false)
+						.add("raw", "false")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.DEBUGGER:
+				return factory.createObjectBuilder()
+						.add("type", "DebuggerStatement")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		case Token.NULL:
+    		default:
+				return factory.createObjectBuilder()
+						.add("type", "Literal")
+						.add("value", (String)null)
+						.add("raw", "null")
+						.add("change", changeType.toString())
+						.add("moved", String.valueOf(isMoved())).build();
+    		}
+
     }
 
     /**

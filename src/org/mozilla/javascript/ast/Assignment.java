@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 /**
  * AST node representing the set of assignment operators such as {@code =},
  * {@code *=} and {@code +=}.
@@ -35,4 +39,21 @@ public class Assignment extends InfixExpression {
                       AstNode right, int operatorPos) {
         super(operator, left, right, operatorPos);
     }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		return factory.createObjectBuilder()
+    				.add("type", "AssignmentExpression")
+    				.add("operator", "=")
+    				.add("left", this.getLeft().getJsonObject())
+    				.add("right", this.getRight().getJsonObject())
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
+    }
+
 }

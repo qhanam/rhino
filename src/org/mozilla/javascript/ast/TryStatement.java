@@ -11,6 +11,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -48,6 +53,32 @@ public class TryStatement extends AstNode {
 
     public TryStatement(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		if(this.getFinallyBlock() == null) {
+			return factory.createObjectBuilder()
+					.add("type", "TryStatement")
+					.add("block", this.getTryBlock().getJsonObject())
+					.add("handler", this.getCatchClauses().get(0).getJsonObject())
+					.add("change", changeType.toString())
+					.add("moved", String.valueOf(isMoved())).build();
+    		}
+    		else {
+			return factory.createObjectBuilder()
+					.add("type", "TryStatement")
+					.add("block", this.getTryBlock().getJsonObject())
+					.add("handler", this.getCatchClauses().get(0).getJsonObject())
+					.add("finalizer", this.getFinallyBlock().getJsonObject())
+					.add("change", changeType.toString())
+					.add("moved", String.valueOf(isMoved())).build();
+		}
     }
 
     /**

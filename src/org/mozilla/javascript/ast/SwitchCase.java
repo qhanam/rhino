@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -46,6 +51,25 @@ public class SwitchCase extends AstNode {
 
     public SwitchCase(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		for(AstNode statement : this.getStatements()) {
+    			arrayBuilder.add(statement.getJsonObject());
+    		}
+    		return factory.createObjectBuilder()
+    				.add("type", "SwitchCase")
+    				.add("test", this.getExpression().getJsonObject())
+    				.add("consequent", arrayBuilder.build())
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

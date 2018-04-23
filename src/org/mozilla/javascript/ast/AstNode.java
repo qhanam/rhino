@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Kit;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
@@ -75,6 +77,12 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     protected int position = -1;
     protected int length = 1;
     protected AstNode parent;
+    
+    /**
+     * {@code true} if a move edit operation was applied to this node by the AST
+     * diff.
+     */
+    protected boolean moved;
 
     /** 
      * The change type from AST differencing. 
@@ -141,6 +149,22 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     public boolean isDummy() {
     	return this.dummy;
     }
+    
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    public abstract JsonObject getJsonObject();
+    
+    /**
+     * @param moved {@code true} if this node has a 'moved' edit operation
+     * applied by AST differencing.
+     * @author qhanam
+     */
+    @Override
+    public void setMoved(boolean moved) {
+    	this.moved = moved;
+    }
 
     /**
      * @param changeType The change applied to this node from AST differencing.
@@ -149,6 +173,11 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     @Override
 	public void setChangeType(ChangeType changeType) {
     	this.changeType = changeType;
+    }
+    
+    @Override
+    public boolean isMoved() {
+		return this.moved;
     }
 
     /**

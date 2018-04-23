@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -51,6 +55,39 @@ public class NumberLiteral extends AstNode {
     public NumberLiteral(double number) {
         setDouble(number);
         setValue(Double.toString(number));
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		try {
+    			int value = Integer.parseInt(this.getValue());
+			return factory.createObjectBuilder()
+					.add("type", "Literal")
+					.add("value", value)
+					.add("raw", this.getValue())
+					.add("change", changeType.toString())
+					.add("moved", String.valueOf(isMoved())).build();
+    		} catch (NumberFormatException e) { /* Ignore */ }
+		try {
+    			double value = Double.parseDouble(this.getValue());
+			return factory.createObjectBuilder()
+					.add("type", "Literal")
+					.add("value", value)
+					.add("raw", this.getValue())
+					.add("change", changeType.toString())
+					.add("moved", String.valueOf(isMoved())).build();
+		} catch (NumberFormatException e ) { /* Ignore */ }
+		return factory.createObjectBuilder()
+				.add("type", "Literal")
+				.add("value", (String)null)
+				.add("raw", this.getValue())
+				.add("change", changeType.toString())
+				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

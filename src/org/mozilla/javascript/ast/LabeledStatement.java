@@ -11,6 +11,10 @@ import org.mozilla.javascript.Token;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 /**
  * A labeled statement.  A statement can have more than one label.  In
  * this AST representation, all labels for a statement are collapsed into
@@ -37,6 +41,21 @@ public class LabeledStatement extends AstNode {
     public LabeledStatement(int pos, int len) {
         super(pos, len);
     }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+		return factory.createObjectBuilder()
+				.add("type", "LabeledStatement")
+				.add("label", this.getLabels().get(0).getJsonObject())
+				.add("body", this.getStatement().getJsonObject())
+				.add("change", changeType.toString())
+				.add("moved", String.valueOf(isMoved())).build();
+	}
 
     /**
      * Returns label list

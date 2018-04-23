@@ -6,6 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -36,6 +41,25 @@ public class NewExpression extends FunctionCall {
 
     public NewExpression(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		for(AstNode argument : this.getArguments()) {
+    			arrayBuilder.add(argument.getJsonObject());
+    		}
+    		return factory.createObjectBuilder()
+    				.add("type", "NewExpression")
+    				.add("callee", this.getTarget().getJsonObject())
+    				.add("arguments", arrayBuilder.build())
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

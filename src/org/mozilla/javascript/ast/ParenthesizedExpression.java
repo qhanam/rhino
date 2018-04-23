@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -40,6 +44,15 @@ public class ParenthesizedExpression extends AstNode {
     public ParenthesizedExpression(int pos, int len, AstNode expr) {
         super(pos, len);
         setExpression(expr);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		return this.getExpression().getJsonObject();
     }
 
     /**

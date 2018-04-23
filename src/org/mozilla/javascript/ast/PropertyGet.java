@@ -6,8 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
 
+import org.mozilla.javascript.Token; 
 /**
  * AST node for the '.' operator.  Node type is {@link Token#GETPROP}.
  */
@@ -30,6 +33,22 @@ public class PropertyGet extends InfixExpression {
 
     public PropertyGet(int pos, int len, AstNode target, Name property) {
         super(pos, len, target, property);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		return factory.createObjectBuilder()
+    				.add("type", "MemberExpression")
+    				.add("computed", false)
+    				.add("object", this.getTarget().getJsonObject())
+    				.add("property", this.getProperty().getJsonObject())
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**

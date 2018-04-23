@@ -210,6 +210,13 @@ public class Node implements Iterable<Node>
     public Node getLastChild() {
         return last;
     }
+    
+    /**
+     * @author qhanam
+     */
+    public void resetNext() {
+    		next = null;
+    }
 
     public Node getNext() {
         return next;

@@ -6,6 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+
 import org.mozilla.javascript.Token;
 
 /**
@@ -59,6 +63,25 @@ public class ObjectProperty extends InfixExpression {
 
     public ObjectProperty(int pos, int len) {
         super(pos, len);
+    }
+
+    /**
+     * @return This node as a JSON object in Esprima format.
+     * @author qhanam
+     */
+    @Override
+    public JsonObject getJsonObject() {
+    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		return factory.createObjectBuilder()
+    				.add("type", "Property")
+    				.add("key", this.getLeft().getJsonObject())
+    				.add("computed", false)
+    				.add("value", this.getRight().getJsonObject())
+    				.add("kind", "init")
+    				.add("method", false)
+    				.add("shorthand", false)
+    				.add("change", changeType.toString())
+    				.add("moved", String.valueOf(isMoved())).build();
     }
 
     /**
