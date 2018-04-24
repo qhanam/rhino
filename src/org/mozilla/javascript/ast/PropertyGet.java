@@ -6,9 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token; 
 /**
@@ -41,14 +39,14 @@ public class PropertyGet extends InfixExpression {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "MemberExpression")
-    				.add("computed", false)
-    				.add("object", this.getTarget().getJsonObject())
-    				.add("property", this.getProperty().getJsonObject())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "MemberExpression");
+		object.addProperty("computed", false);
+		object.add("object", this.getTarget().getJsonObject());
+		object.add("property", this.getProperty().getJsonObject());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

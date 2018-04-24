@@ -6,9 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
 
@@ -49,13 +47,14 @@ public class ReturnStatement extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "ReturnStatement")
-    				.add("argument", this.getReturnValue().getJsonObject())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "ReturnStatement");
+		object.add("argument", this.getReturnValue().getJsonObject());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
+
     /**
      * Clones the AstNode.
      * @return The clone of the AstNode.

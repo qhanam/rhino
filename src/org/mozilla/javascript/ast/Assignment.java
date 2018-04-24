@@ -6,9 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 /**
  * AST node representing the set of assignment operators such as {@code =},
@@ -46,14 +44,14 @@ public class Assignment extends InfixExpression {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "AssignmentExpression")
-    				.add("operator", "=")
-    				.add("left", this.getLeft().getJsonObject())
-    				.add("right", this.getRight().getJsonObject())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "AssignmentExpression");
+		object.addProperty("operator", "=");
+		object.add("left", this.getLeft().getJsonObject());
+		object.add("right", this.getRight().getJsonObject());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
 }

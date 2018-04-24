@@ -6,10 +6,8 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
 
@@ -49,17 +47,17 @@ public class NewExpression extends FunctionCall {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
     		for(AstNode argument : this.getArguments()) {
-    			arrayBuilder.add(argument.getJsonObject());
+    			array.add(argument.getJsonObject());
     		}
-    		return factory.createObjectBuilder()
-    				.add("type", "NewExpression")
-    				.add("callee", this.getTarget().getJsonObject())
-    				.add("arguments", arrayBuilder.build())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", "NewExpression");
+		object.add("callee", this.getTarget().getJsonObject());
+		object.add("arguments", array);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

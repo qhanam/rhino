@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Kit;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 import ca.ubc.ece.salt.gumtree.ast.ClassifiedASTNode;
 

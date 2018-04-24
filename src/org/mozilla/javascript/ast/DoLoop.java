@@ -6,11 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * Do statement.  Node type is {@link Token#DO}.<p>
@@ -44,13 +42,13 @@ public class DoLoop extends Loop {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "DoWhileStatement")
-    				.add("test", this.getCondition().getJsonObject())
-    				.add("body", this.getBody().getJsonObject())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "DoWhileStatement");
+		object.add("test", this.getCondition().getJsonObject());
+		object.add("body", this.getBody().getJsonObject());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

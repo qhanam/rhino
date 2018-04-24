@@ -11,9 +11,7 @@ import org.mozilla.javascript.Token;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 /**
  * AST node for an E4X (Ecma-357) embedded XML literal.  Node type is
@@ -47,9 +45,9 @@ public class XmlLiteral extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "XmlLiteral").build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "XmlLiteral");
+		return object;
     }
 
     /**

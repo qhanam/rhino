@@ -6,9 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
 
@@ -63,31 +61,32 @@ public class NumberLiteral extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonObject object = new JsonObject();
     		try {
     			int value = Integer.parseInt(this.getValue());
-			return factory.createObjectBuilder()
-					.add("type", "Literal")
-					.add("value", value)
-					.add("raw", this.getValue())
-					.add("change", changeType.toString())
-					.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "Literal");
+			object.addProperty("value", value);
+			object.addProperty("raw", this.getValue());
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
     		} catch (NumberFormatException e) { /* Ignore */ }
+
 		try {
     			double value = Double.parseDouble(this.getValue());
-			return factory.createObjectBuilder()
-					.add("type", "Literal")
-					.add("value", value)
-					.add("raw", this.getValue())
-					.add("change", changeType.toString())
-					.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "Literal");
+			object.addProperty("value", value);
+			object.addProperty("raw", this.getValue());
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
 		} catch (NumberFormatException e ) { /* Ignore */ }
-		return factory.createObjectBuilder()
-				.add("type", "Literal")
-				.add("value", (String)null)
-				.add("raw", this.getValue())
-				.add("change", changeType.toString())
-				.add("moved", String.valueOf(isMoved())).build();
+
+		object.addProperty("type", "Literal");
+		object.addProperty("value", (String)null);
+		object.addProperty("raw", this.getValue());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

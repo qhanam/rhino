@@ -6,9 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
 
@@ -49,14 +47,14 @@ public class Yield extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonObject object = new JsonObject();
     		JsonObject value = this.getValue() == null ? null : this.getValue().getJsonObject();
-    		return factory.createObjectBuilder()
-    				.add("type", "YieldExpression")
-    				.add("expression", value)
-    				.add("delegate", false)
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", "YieldExpression");
+		object.add("expression", value);
+		object.addProperty("delegate", false);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

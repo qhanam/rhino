@@ -6,11 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * AST node representing an infix (binary operator) expression.
@@ -66,7 +64,7 @@ public class InfixExpression extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonObject object = new JsonObject();
     		String type = null;
     		String operator = null;
     		
@@ -180,11 +178,11 @@ public class InfixExpression extends AstNode {
 			operator = null; break;
     		}
 
-		return factory.createObjectBuilder()
-				.add("type", type)
-				.add("operator", operator)
-				.add("change", changeType.toString())
-				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", type);
+		object.addProperty("operator", operator);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

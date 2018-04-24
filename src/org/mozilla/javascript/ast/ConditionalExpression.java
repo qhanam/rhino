@@ -6,12 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * AST node representing the ternary operator.  Node type is
@@ -56,14 +53,14 @@ public class ConditionalExpression extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "ConditionalExpression")
-    				.add("test", this.getTestExpression().getJsonObject())
-    				.add("consequent", this.getTrueExpression().getJsonObject())
-    				.add("alternate", this.getFalseExpression().getJsonObject())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "ConditionalExpression");
+		object.add("test", this.getTestExpression().getJsonObject());
+		object.add("consequent", this.getTrueExpression().getJsonObject());
+		object.add("alternate", this.getFalseExpression().getJsonObject());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

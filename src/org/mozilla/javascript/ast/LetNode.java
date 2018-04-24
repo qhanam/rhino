@@ -6,13 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * AST node for let statements and expressions.
@@ -56,17 +54,16 @@ public class LetNode extends Scope {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
-    		for(VariableInitializer initializer : this.getVariables().getVariables()) {
-    			arrayBuilder.add(initializer.getJsonObject());
-    		}
-    		return factory.createObjectBuilder()
-    				.add("type", "VariableDeclaration")
-    				.add("declarations", arrayBuilder.build())
-    				.add("kind", "let")
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
+    		for(VariableInitializer initializer : this.getVariables().getVariables())
+    			array.add(initializer.getJsonObject());
+		object.addProperty("type", "VariableDeclaration");
+		object.add("declarations", array);
+		object.addProperty("kind", "let");
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

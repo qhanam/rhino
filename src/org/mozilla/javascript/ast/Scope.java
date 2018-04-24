@@ -12,10 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
@@ -55,16 +53,16 @@ public class Scope extends Jump {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
     		for(AstNode statement : this.getStatements()) {
-    			arrayBuilder.add(statement.getJsonObject());
+    			array.add(statement.getJsonObject());
     		}
-    		return factory.createObjectBuilder()
-    				.add("type", "BlockStatement")
-    				.add("body", arrayBuilder.build())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", "BlockStatement");
+		object.add("body", array);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

@@ -6,11 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * AST node representing a label.  It is a distinct node type so it can
@@ -49,12 +47,12 @@ public class Label extends Jump {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-		return factory.createObjectBuilder()
-				.add("type", "Identifier")
-				.add("name", this.getName())
-				.add("change", changeType.toString())
-				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "Identifier");
+		object.addProperty("name", this.getName());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
 	}
 
     /**

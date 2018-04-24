@@ -11,10 +11,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 import org.mozilla.javascript.Token;
 
@@ -68,17 +66,17 @@ public class SwitchStatement extends Jump {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
     		for(AstNode switchCase : this.getCases()) {
-    			arrayBuilder.add(switchCase.getJsonObject());
+    			array.add(switchCase.getJsonObject());
     		}
-    		return factory.createObjectBuilder()
-    				.add("type", "SwitchStatement")
-    				.add("discriminant", this.getExpression().getJsonObject())
-    				.add("cases", arrayBuilder.build())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", "SwitchStatement");
+		object.add("discriminant", this.getExpression().getJsonObject());
+		object.add("cases", array);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

@@ -13,13 +13,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * A JavaScript function declaration or expression.<p>
@@ -127,37 +125,36 @@ public class FunctionNode extends ScriptNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
-    		for(AstNode param : this.getParams()) {
-    			arrayBuilder.add(param.getJsonObject());
-    		}
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
+    		for(AstNode param : this.getParams())
+    			array.add(param.getJsonObject());
     		String type = "";
     		String name = this.getName();
     		if(name.isEmpty()) name = null;
     		switch(this.getFunctionType()) {
     		case FUNCTION_STATEMENT:
-				return factory.createObjectBuilder()
-						.add("type", "FunctionDeclaration")
-						.add("id", name)
-						.add("params", arrayBuilder.build())
-						.add("generator", this.isGenerator)
-						.add("expression", this.isExpressionClosure)
-						.add("async", false)
-						.add("change", changeType.toString())
-						.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "FunctionDeclaration");
+			object.addProperty("id", name);
+			object.add("params", array);
+			object.addProperty("generator", this.isGenerator);
+			object.addProperty("expression", this.isExpressionClosure);
+			object.addProperty("async", false);
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
     		case FUNCTION_EXPRESSION:
     		case FUNCTION_EXPRESSION_STATEMENT:
     		default:
-				return factory.createObjectBuilder()
-						.add("type", "FunctionDeclaration")
-						.add("id", name)
-						.add("params", arrayBuilder.build())
-						.add("generator", this.isGenerator)
-						.add("expression", this.isExpressionClosure)
-						.add("async", false)
-						.add("change", changeType.toString())
-						.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "FunctionDeclaration");
+			object.addProperty("id", name);
+			object.add("params", array);
+			object.addProperty("generator", this.isGenerator);
+			object.addProperty("expression", this.isExpressionClosure);
+			object.addProperty("async", false);
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
     		}
     }
 

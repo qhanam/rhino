@@ -8,12 +8,10 @@ package org.mozilla.javascript.ast;
 
 import org.mozilla.javascript.Token;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
 
 /**
  * A labeled statement.  A statement can have more than one label.  In
@@ -48,13 +46,13 @@ public class LabeledStatement extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-		return factory.createObjectBuilder()
-				.add("type", "LabeledStatement")
-				.add("label", this.getLabels().get(0).getJsonObject())
-				.add("body", this.getStatement().getJsonObject())
-				.add("change", changeType.toString())
-				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "LabeledStatement");
+		object.add("label", this.getLabels().get(0).getJsonObject());
+		object.add("body", this.getStatement().getJsonObject());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
 	}
 
     /**

@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 import org.mozilla.javascript.Token;
 
@@ -56,17 +54,17 @@ public class VariableDeclaration extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
     		for(VariableInitializer initializer : this.getVariables()) {
-    			arrayBuilder.add(initializer.getJsonObject());
+    			array.add(initializer.getJsonObject());
     		}
-    		return factory.createObjectBuilder()
-    				.add("type", "VariableDeclaration")
-    				.add("declarations", arrayBuilder.build())
-    				.add("kind", "var")
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", "VariableDeclaration");
+		object.add("declarations", array);
+		object.addProperty("kind", "var");
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

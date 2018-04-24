@@ -6,11 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * AST node representing a parse error or a warning.  Node type is
@@ -41,12 +39,12 @@ public class ErrorNode extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "ParseError")
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
-    }
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "ParseError");
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
+}
 
     /**
      * Returns error message key

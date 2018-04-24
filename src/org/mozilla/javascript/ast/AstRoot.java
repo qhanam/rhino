@@ -9,13 +9,11 @@ package org.mozilla.javascript.ast;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * Node for the root of a parse tree.  It contains the statements and functions
@@ -49,17 +47,17 @@ public class AstRoot extends ScriptNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
     		for(Node element : this) {
-    			arrayBuilder.add(((AstNode)element).getJsonObject());
+    			array.add(((AstNode)element).getJsonObject());
     		}
-    		return factory.createObjectBuilder()
-    				.add("type", "Program")
-    				.add("body", arrayBuilder.build())
-    				.add("sourceType", "script")
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", "Program");
+		object.add("body", array);
+		object.addProperty("sourceType", "script");
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+    		return object;
     }
 
     /**

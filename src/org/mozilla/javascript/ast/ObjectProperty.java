@@ -6,9 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
 
@@ -71,17 +69,17 @@ public class ObjectProperty extends InfixExpression {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "Property")
-    				.add("key", this.getLeft().getJsonObject())
-    				.add("computed", false)
-    				.add("value", this.getRight().getJsonObject())
-    				.add("kind", "init")
-    				.add("method", false)
-    				.add("shorthand", false)
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "Property");
+		object.add("key", this.getLeft().getJsonObject());
+		object.addProperty("computed", false);
+		object.add("value", this.getRight().getJsonObject());
+		object.addProperty("kind", "init");
+		object.addProperty("method", false);
+		object.addProperty("shorthand", false);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+    		return object;
     }
 
     /**

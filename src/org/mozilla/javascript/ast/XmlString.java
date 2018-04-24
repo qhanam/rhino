@@ -6,9 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 /**
  * AST node for an XML-text-only component of an XML literal expression.  This
@@ -37,9 +35,9 @@ public class XmlString extends XmlFragment {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "XmlElemRef").build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "XmlElemRef");
+		return object;
     }
 
     /**

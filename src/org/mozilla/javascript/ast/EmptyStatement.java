@@ -6,11 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * AST node for an empty statement.  Node type is {@link Token#EMPTY}.<p>
@@ -39,12 +37,12 @@ public class EmptyStatement extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "EmptyStatement")
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
-    }
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "EmptyStatement");
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
+}
 
     @Override
     public String toSource(int depth) {

@@ -6,12 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * Used for code generation.  During codegen, the AST is transformed
@@ -61,9 +59,9 @@ public class Jump extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "Jump").build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "Jump");
+		return object;
     }
 
     public void setJumpStatement(Jump jumpStatement)

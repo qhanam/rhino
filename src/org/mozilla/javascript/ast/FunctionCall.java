@@ -11,12 +11,10 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * AST node for a function call.  Node type is {@link Token#CALL}.<p>
@@ -52,17 +50,16 @@ public class FunctionCall extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
-    		for(AstNode argument : this.getArguments()) {
-    			arrayBuilder.add(argument.getJsonObject());
-    		}
-    		return factory.createObjectBuilder()
-    				.add("type", "CallExpression")
-    				.add("callee", this.getTarget().getJsonObject())
-    				.add("arguments", arrayBuilder.build())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
+    		for(AstNode argument : this.getArguments())
+    			array.add(argument.getJsonObject());
+		object.addProperty("type", "CallExpression");
+		object.add("callee", this.getTarget().getJsonObject());
+		object.add("arguments", array);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

@@ -6,12 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * AST node for keyword literals:  currently, {@code this},
@@ -51,40 +48,40 @@ public class KeywordLiteral extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonObject object = new JsonObject();
     		switch(this.getType()) {
     		case Token.THIS:
-				return factory.createObjectBuilder()
-						.add("type", "ThisExpression")
-						.add("change", changeType.toString())
-						.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "ThisExpression");
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
     		case Token.TRUE:
-				return factory.createObjectBuilder()
-						.add("type", "Literal")
-						.add("value", true)
-						.add("raw", "true")
-						.add("change", changeType.toString())
-						.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "Literal");
+			object.addProperty("value", true);
+			object.addProperty("raw", "true");
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
     		case Token.FALSE:
-				return factory.createObjectBuilder()
-						.add("type", "Literal")
-						.add("value", false)
-						.add("raw", "false")
-						.add("change", changeType.toString())
-						.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "Literal");
+			object.addProperty("value", false);
+			object.addProperty("raw", "false");
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
     		case Token.DEBUGGER:
-				return factory.createObjectBuilder()
-						.add("type", "DebuggerStatement")
-						.add("change", changeType.toString())
-						.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "DebuggerStatement");
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
     		case Token.NULL:
     		default:
-				return factory.createObjectBuilder()
-						.add("type", "Literal")
-						.add("value", (String)null)
-						.add("raw", "null")
-						.add("change", changeType.toString())
-						.add("moved", String.valueOf(isMoved())).build();
+			object.addProperty("type", "Literal");
+			object.addProperty("value", (String)null);
+			object.addProperty("raw", "null");
+			object.addProperty("change", changeType.toString());
+			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
     		}
 
     }

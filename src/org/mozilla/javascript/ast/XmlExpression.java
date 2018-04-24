@@ -6,9 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
 
@@ -44,10 +42,10 @@ public class XmlExpression extends XmlFragment {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "XmlExpression").build();
-    }
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "XmlExpression");
+		return object;
+	}
 
     /**
      * Returns the expression embedded in {}

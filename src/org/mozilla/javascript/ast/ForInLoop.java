@@ -6,11 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * For-in or for-each-in statement.  Node type is {@link Token#FOR}.<p>
@@ -47,15 +45,15 @@ public class ForInLoop extends Loop {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		return factory.createObjectBuilder()
-    				.add("type", "ForInStatement")
-    				.add("left", this.getIterator().getJsonObject())
-    				.add("right", this.getIteratedObject().getJsonObject())
-    				.add("body", this.getBody().getJsonObject())
-    				.add("each", false)
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+		object.addProperty("type", "ForInStatement");
+		object.add("left", this.getIterator().getJsonObject());
+		object.add("right", this.getIteratedObject().getJsonObject());
+		object.add("body", this.getBody().getJsonObject());
+		object.addProperty("each", false);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

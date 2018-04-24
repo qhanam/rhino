@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
 
@@ -59,17 +57,17 @@ public class SwitchCase extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
     		for(AstNode statement : this.getStatements()) {
-    			arrayBuilder.add(statement.getJsonObject());
+    			array.add(statement.getJsonObject());
     		}
-    		return factory.createObjectBuilder()
-    				.add("type", "SwitchCase")
-    				.add("test", this.getExpression().getJsonObject())
-    				.add("consequent", arrayBuilder.build())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", "SwitchCase");
+		object.add("test", this.getExpression().getJsonObject());
+		object.add("consequent", array);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**

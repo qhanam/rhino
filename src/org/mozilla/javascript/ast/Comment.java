@@ -6,11 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonObject;
 
 /**
  * Node representing comments.
@@ -70,7 +68,7 @@ public class Comment extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
+    		JsonObject object = new JsonObject();
     		String type = "Block";
     		switch(this.commentType) {
     		case LINE:
@@ -82,11 +80,11 @@ public class Comment extends AstNode {
 		default:
     			type = "Block";
     		}
-    		return factory.createObjectBuilder()
-    				.add("type", type)
-    				.add("value", this.getValue())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+		object.addProperty("type", type);
+		object.addProperty("value", this.getValue());
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
 

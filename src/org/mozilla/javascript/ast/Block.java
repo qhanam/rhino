@@ -6,13 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * A block statement delimited by curly braces.  The node position is the
@@ -45,16 +43,15 @@ public class Block extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
-    		for(Node element : this) {
-    			arrayBuilder.add(((AstNode)element).getJsonObject());
-    		}
-    		return factory.createObjectBuilder()
-    				.add("type", "BlockStatement")
-    				.add("body", arrayBuilder.build())
-    				.add("change", changeType.toString())
-    				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
+    		for(Node element : this)
+    			array.add(((AstNode)element).getJsonObject());
+		object.addProperty("type", "BlockStatement");
+		object.add("body", array);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+    		return object;
     }
 
     /**

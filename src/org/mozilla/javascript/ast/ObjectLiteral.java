@@ -11,10 +11,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 import org.mozilla.javascript.Token;
 
@@ -65,16 +63,15 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonBuilderFactory factory = Json.createBuilderFactory(null);
-    		JsonArrayBuilder arrayBuilder = factory.createArrayBuilder();
-    		for(AstNode property : this.getElements()) {
-    			arrayBuilder.add(property.getJsonObject());
-    		}
-		return factory.createObjectBuilder()
-				.add("type", "ObjectExpression")
-				.add("properties", arrayBuilder.build())
-				.add("change", changeType.toString())
-				.add("moved", String.valueOf(isMoved())).build();
+    		JsonObject object = new JsonObject();
+    		JsonArray array = new JsonArray();
+    		for(AstNode property : this.getElements())
+    			array.add(property.getJsonObject());
+		object.addProperty("type", "ObjectExpression");
+		object.add("properties", array);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
     }
 
     /**
