@@ -8,6 +8,7 @@ package org.mozilla.javascript.ast;
 
 import org.mozilla.javascript.Token;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
@@ -51,7 +52,8 @@ public class IfStatement extends AstNode {
 		object.addProperty("type", "IfStatement");
 		object.add("test", this.getCondition().getJsonObject());
 		object.add("consequent", this.getThenPart().getJsonObject());
-		object.add("alternate", this.getElsePart().getJsonObject());
+		if(this.getElsePart() != null) object.add("alternate", this.getElsePart().getJsonObject());
+		else object.add("alternate", JsonNull.INSTANCE);
 		object.addProperty("change", changeType.toString());
 		object.addProperty("moved", String.valueOf(isMoved()));
 		return object;

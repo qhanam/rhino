@@ -6,6 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
@@ -36,7 +37,8 @@ public class VariableInitializer extends AstNode {
     		JsonObject object = new JsonObject();
 		object.addProperty("type", "VariableDeclarator");
 		object.add("id", this.getTarget().getJsonObject());
-		object.add("init", this.getInitializer().getJsonObject());
+		if(this.getInitializer() != null) object.add("init", this.getInitializer().getJsonObject());
+		else object.add("init", JsonNull.INSTANCE);
 		object.addProperty("change", changeType.toString());
 		object.addProperty("moved", String.valueOf(isMoved()));
 		return object;
