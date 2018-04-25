@@ -69,6 +69,7 @@ public class NumberLiteral extends AstNode {
 			object.addProperty("raw", this.getValue());
 			object.addProperty("change", changeType.toString());
 			object.addProperty("moved", String.valueOf(isMoved()));
+			return object;
     		} catch (NumberFormatException e) { /* Ignore */ }
 
 		try {

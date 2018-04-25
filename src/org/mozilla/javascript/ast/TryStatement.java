@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
@@ -63,6 +64,7 @@ public class TryStatement extends AstNode {
 			object.addProperty("type", "TryStatement");
 			object.add("block", this.getTryBlock().getJsonObject());
 			object.add("handler", this.getCatchClauses().get(0).getJsonObject());
+			object.add("finalizer", JsonNull.INSTANCE);
 			object.addProperty("change", changeType.toString());
 			object.addProperty("moved", String.valueOf(isMoved()));
 			return object;

@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
@@ -59,11 +60,13 @@ public class SwitchCase extends AstNode {
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();
     		JsonArray array = new JsonArray();
-    		for(AstNode statement : this.getStatements()) {
-    			array.add(statement.getJsonObject());
+    		if(this.getStatements() != null) {
+				for(AstNode statement : this.getStatements()) 
+					array.add(statement.getJsonObject());
     		}
 		object.addProperty("type", "SwitchCase");
-		object.add("test", this.getExpression().getJsonObject());
+		if(this.getExpression() != null) object.add("test", this.getExpression().getJsonObject());
+		else object.add("test", JsonNull.INSTANCE);
 		object.add("consequent", array);
 		object.addProperty("change", changeType.toString());
 		object.addProperty("moved", String.valueOf(isMoved()));

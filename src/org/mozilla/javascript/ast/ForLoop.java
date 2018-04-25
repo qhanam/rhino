@@ -9,6 +9,7 @@ package org.mozilla.javascript.ast;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
@@ -47,9 +48,12 @@ public class ForLoop extends Loop {
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();
 		object.addProperty("type", "ForStatement");
-		object.add("init", this.getInitializer().getJsonObject());
-		object.add("test", this.getCondition().getJsonObject());
-		object.add("update", this.getIncrement().getJsonObject());
+		if(this.getInitializer() instanceof EmptyExpression) object.add("init", JsonNull.INSTANCE);
+		else object.add("init", this.getInitializer().getJsonObject());
+		if(this.getCondition() instanceof EmptyExpression) object.add("test", JsonNull.INSTANCE);
+		else object.add("test", this.getCondition().getJsonObject());
+		if(this.getIncrement() instanceof EmptyExpression) object.add("update", JsonNull.INSTANCE);
+		else object.add("update", this.getIncrement().getJsonObject());
 		object.add("body", this.getBody().getJsonObject());
 		object.addProperty("change", changeType.toString());
 		object.addProperty("moved", String.valueOf(isMoved()));

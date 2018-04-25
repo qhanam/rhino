@@ -17,6 +17,8 @@ import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
@@ -127,16 +129,29 @@ public class FunctionNode extends ScriptNode {
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();
     		JsonArray array = new JsonArray();
+
     		for(AstNode param : this.getParams())
     			array.add(param.getJsonObject());
-    		String type = "";
-    		String name = this.getName();
-    		if(name.isEmpty()) name = null;
+
+    		JsonElement name;
+    		if(this.getName().isEmpty()) {
+    			name = JsonNull.INSTANCE;
+    		}
+    		else {
+    			JsonObject tmp = new JsonObject();
+    			tmp.addProperty("type", "Identifier");
+    			tmp.addProperty("name", this.getName());
+    			tmp.addProperty("change", getChangeType().toString());
+    			tmp.addProperty("moved", String.valueOf(isMoved()));
+    			name = tmp;
+    		}
+
     		switch(this.getFunctionType()) {
     		case FUNCTION_STATEMENT:
 			object.addProperty("type", "FunctionDeclaration");
-			object.addProperty("id", name);
+			object.add("id", name);
 			object.add("params", array);
+			object.add("body", this.getBody().getJsonObject());
 			object.addProperty("generator", this.isGenerator);
 			object.addProperty("expression", this.isExpressionClosure);
 			object.addProperty("async", false);
@@ -147,8 +162,9 @@ public class FunctionNode extends ScriptNode {
     		case FUNCTION_EXPRESSION_STATEMENT:
     		default:
 			object.addProperty("type", "FunctionDeclaration");
-			object.addProperty("id", name);
+			object.add("id", name);
 			object.add("params", array);
+			object.add("body", this.getBody().getJsonObject());
 			object.addProperty("generator", this.isGenerator);
 			object.addProperty("expression", this.isExpressionClosure);
 			object.addProperty("async", false);

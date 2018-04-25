@@ -157,7 +157,15 @@ public class InfixExpression extends AstNode {
     			operator = "<"; break;
     		case Token.LE:
     			operator = "<="; break;
-    		case Token.MOD: // Arithmetic Operators
+    		case Token.ADD: // Arithmetic Operators
+    			operator = "+"; break;
+    		case Token.SUB:
+    			operator = "-"; break;
+    		case Token.MUL:
+    			operator = "*"; break;
+    		case Token.DIV:
+    			operator = "/"; break;
+    		case Token.MOD:
     			operator = "%"; break;
     		case Token.BITAND: // Bitwise Operators
     			operator = "&"; break;
@@ -180,6 +188,8 @@ public class InfixExpression extends AstNode {
 
 		object.addProperty("type", type);
 		object.addProperty("operator", operator);
+		object.add("left", this.getLeft().getJsonObject());
+		object.add("right", this.getRight().getJsonObject());
 		object.addProperty("change", changeType.toString());
 		object.addProperty("moved", String.valueOf(isMoved()));
 		return object;

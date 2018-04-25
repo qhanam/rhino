@@ -6,6 +6,7 @@
 
 package org.mozilla.javascript.ast;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import org.mozilla.javascript.Token;
@@ -49,7 +50,8 @@ public class ReturnStatement extends AstNode {
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();
 		object.addProperty("type", "ReturnStatement");
-		object.add("argument", this.getReturnValue().getJsonObject());
+		if(this.getReturnValue() != null) object.add("argument", this.getReturnValue().getJsonObject());
+		else object.add("argument", JsonNull.INSTANCE);
 		object.addProperty("change", changeType.toString());
 		object.addProperty("moved", String.valueOf(isMoved()));
 		return object;

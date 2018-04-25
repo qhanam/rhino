@@ -56,75 +56,50 @@ public class UnaryExpression extends AstNode {
     @Override
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();
+    		String type = null;
+    		String operator = null;
+    		boolean prefix = false;
+
     		switch(this.getOperator()) {
-    		case Token.ADD:
-			object.addProperty("type", "UnaryExpression");
-			object.addProperty("operator", "+");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
-    		case Token.NEG:
-			object.addProperty("type", "UnaryExpression");
-			object.addProperty("operator", "-");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
-    		case Token.NOT:
-			object.addProperty("type", "UnaryExpression");
-			object.addProperty("operator", "!");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
     		case Token.INC:
-			object.addProperty("type", "UpdateExpression");
-			object.addProperty("operator", "++");
-			object.addProperty("prefix", false);
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
     		case Token.DEC:
-			object.addProperty("type", "UpdateExpression");
-			object.addProperty("operator", "--");
-			object.addProperty("prefix", false);
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
+    			type = "UpdateExpression";
+    			break;
+    		case Token.ADD:
+    		case Token.NEG:
+    		case Token.NOT:
     		case Token.BITNOT:
-			object.addProperty("type", "UnaryExpression");
-			object.addProperty("operator", "~");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
     		case Token.TYPEOF:
     		case Token.TYPEOFNAME:
-			object.addProperty("type", "UnaryExpression");
-			object.addProperty("operator", "typeof");
-			object.addProperty("prefix", true);
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
     		case Token.DELPROP:
-			object.addProperty("type", "UnaryExpression");
-			object.addProperty("operator", "delete");
-			object.addProperty("prefix", true);
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
     		case Token.VOID:
-			object.addProperty("type", "UnaryExpression");
-			object.addProperty("operator", "void");
-			object.addProperty("prefix", true);
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
 		default:
-			object.addProperty("type", "UnaryExpression");
-			object.addProperty("operator", (String)null);
-			object.addProperty("prefix", true);
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
-			return object;
+    			type = "UnaryExpression";
+    			break;
     		}
+
+    		switch(this.getOperator()) {
+    		case Token.ADD: operator = "+"; prefix = true; break;
+    		case Token.NEG: operator = "-"; prefix = true; break;
+    		case Token.NOT: operator = "!"; prefix = true; break;
+    		case Token.INC: operator = "++"; prefix = false; break;
+    		case Token.DEC: operator = "--"; prefix = false; break;
+    		case Token.BITNOT: operator = "~"; prefix = true; break;
+    		case Token.TYPEOF:
+    		case Token.TYPEOFNAME: operator = "typeof"; prefix = true; break;
+    		case Token.DELPROP: operator = "delete"; prefix = true; break;
+    		case Token.VOID: operator = "void"; prefix = true; break;
+		default: operator = "unk"; prefix = true; break;
+    		}
+    		
+		object.addProperty("type", type);
+		object.addProperty("operator", operator);
+		object.add("argument", this.getOperand().getJsonObject());
+		object.addProperty("prefix", prefix);
+		object.addProperty("change", changeType.toString());
+		object.addProperty("moved", String.valueOf(isMoved()));
+		return object;
+    		
     }
 
     /**

@@ -8,6 +8,7 @@ package org.mozilla.javascript.ast;
 
 import org.mozilla.javascript.Token;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
@@ -61,7 +62,8 @@ public class ContinueStatement extends Jump {
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();
 		object.addProperty("type", "ContinueStatement");
-		object.add("label", this.getLabel().getJsonObject());
+		if(this.getLabel() != null) object.add("label", this.getLabel().getJsonObject());
+		else object.add("label", JsonNull.INSTANCE);
 		object.addProperty("change", changeType.toString());
 		object.addProperty("moved", String.valueOf(isMoved()));
 		return object;

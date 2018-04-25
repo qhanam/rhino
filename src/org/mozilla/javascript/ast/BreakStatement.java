@@ -8,6 +8,7 @@ package org.mozilla.javascript.ast;
 
 import org.mozilla.javascript.Token;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
@@ -46,7 +47,8 @@ public class BreakStatement extends Jump {
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();;
 		object.addProperty("type", "BreakStatement");
-		object.add("label", this.getBreakLabel().getJsonObject());
+		if(this.getBreakLabel() != null) object.add("label", this.getBreakLabel().getJsonObject());
+		else object.add("label", JsonNull.INSTANCE);
 		object.addProperty("change", changeType.toString());
 		object.addProperty("moved", String.valueOf(isMoved()));
     		return object;
