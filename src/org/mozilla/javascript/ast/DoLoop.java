@@ -46,8 +46,8 @@ public class DoLoop extends Loop {
 		object.addProperty("type", "DoWhileStatement");
 		object.add("test", this.getCondition().getJsonObject());
 		object.add("body", this.getBody().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

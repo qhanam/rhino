@@ -141,8 +141,8 @@ public class FunctionNode extends ScriptNode {
     			JsonObject tmp = new JsonObject();
     			tmp.addProperty("type", "Identifier");
     			tmp.addProperty("name", this.getName());
-    			tmp.addProperty("change", getChangeType().toString());
-    			tmp.addProperty("moved", String.valueOf(isMoved()));
+			tmp.addProperty("change", changeType.toString());
+			tmp.addProperty("change-noprop", changeTypeNoProp.toString());
     			name = tmp;
     		}
 
@@ -156,7 +156,7 @@ public class FunctionNode extends ScriptNode {
 			object.addProperty("expression", this.isExpressionClosure);
 			object.addProperty("async", false);
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		case FUNCTION_EXPRESSION:
     		case FUNCTION_EXPRESSION_STATEMENT:
@@ -169,7 +169,7 @@ public class FunctionNode extends ScriptNode {
 			object.addProperty("expression", this.isExpressionClosure);
 			object.addProperty("async", false);
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		}
     }

@@ -48,8 +48,8 @@ public class WithStatement extends AstNode {
 		object.addProperty("type", "WithStatement");
 		object.add("object", this.getExpression().getJsonObject());
 		object.add("body", this.getStatement().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

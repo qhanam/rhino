@@ -51,8 +51,8 @@ public class ForInLoop extends Loop {
 		object.add("right", this.getIteratedObject().getJsonObject());
 		object.add("body", this.getBody().getJsonObject());
 		object.addProperty("each", false);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

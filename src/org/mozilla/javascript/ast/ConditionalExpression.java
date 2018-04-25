@@ -58,8 +58,8 @@ public class ConditionalExpression extends AstNode {
 		object.add("test", this.getTestExpression().getJsonObject());
 		object.add("consequent", this.getTrueExpression().getJsonObject());
 		object.add("alternate", this.getFalseExpression().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

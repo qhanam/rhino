@@ -68,7 +68,7 @@ public class NumberLiteral extends AstNode {
 			object.addProperty("value", value);
 			object.addProperty("raw", this.getValue());
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		} catch (NumberFormatException e) { /* Ignore */ }
 
@@ -78,15 +78,15 @@ public class NumberLiteral extends AstNode {
 			object.addProperty("value", value);
 			object.addProperty("raw", this.getValue());
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
 		} catch (NumberFormatException e ) { /* Ignore */ }
 
 		object.addProperty("type", "Literal");
 		object.addProperty("value", (String)null);
 		object.addProperty("raw", this.getValue());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

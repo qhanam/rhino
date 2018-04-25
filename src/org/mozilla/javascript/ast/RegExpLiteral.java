@@ -44,8 +44,8 @@ public class RegExpLiteral extends AstNode {
 		object.addProperty("type", "Literal");
 		object.addProperty("value", this.getValue());
 		object.addProperty("raw", this.getValue());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

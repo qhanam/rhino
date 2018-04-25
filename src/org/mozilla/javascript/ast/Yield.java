@@ -52,8 +52,8 @@ public class Yield extends AstNode {
 		object.addProperty("type", "YieldExpression");
 		object.add("expression", value);
 		object.addProperty("delegate", false);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

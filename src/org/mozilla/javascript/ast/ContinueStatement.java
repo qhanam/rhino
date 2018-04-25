@@ -64,8 +64,8 @@ public class ContinueStatement extends Jump {
 		object.addProperty("type", "ContinueStatement");
 		if(this.getLabel() != null) object.add("label", this.getLabel().getJsonObject());
 		else object.add("label", JsonNull.INSTANCE);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

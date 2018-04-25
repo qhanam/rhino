@@ -73,7 +73,7 @@ public class ArrayLiteral extends AstNode implements DestructuringForm {
     		object.addProperty("type", "ArrayExpression");
     		object.add("elements", array);
     		object.addProperty("change", changeType.toString());
-    		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
     		return object;
     }
 

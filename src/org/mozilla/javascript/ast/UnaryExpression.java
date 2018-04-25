@@ -96,8 +96,8 @@ public class UnaryExpression extends AstNode {
 		object.addProperty("operator", operator);
 		object.add("argument", this.getOperand().getJsonObject());
 		object.addProperty("prefix", prefix);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     		
     }

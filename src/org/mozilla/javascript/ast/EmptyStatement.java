@@ -39,8 +39,8 @@ public class EmptyStatement extends AstNode {
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();
 		object.addProperty("type", "EmptyStatement");
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
 }
 

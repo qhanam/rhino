@@ -66,7 +66,7 @@ public class TryStatement extends AstNode {
 			object.add("handler", this.getCatchClauses().get(0).getJsonObject());
 			object.add("finalizer", JsonNull.INSTANCE);
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		}
     		else {
@@ -75,7 +75,7 @@ public class TryStatement extends AstNode {
 			object.add("handler", this.getCatchClauses().get(0).getJsonObject());
 			object.add("finalizer", this.getFinallyBlock().getJsonObject());
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
 		}
     }

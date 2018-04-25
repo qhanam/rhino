@@ -68,8 +68,8 @@ public class SwitchCase extends AstNode {
 		if(this.getExpression() != null) object.add("test", this.getExpression().getJsonObject());
 		else object.add("test", JsonNull.INSTANCE);
 		object.add("consequent", array);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

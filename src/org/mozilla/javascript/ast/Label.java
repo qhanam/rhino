@@ -50,8 +50,8 @@ public class Label extends Jump {
     		JsonObject object = new JsonObject();
 		object.addProperty("type", "Identifier");
 		object.addProperty("name", this.getName());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
 	}
 

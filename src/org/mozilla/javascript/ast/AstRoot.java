@@ -55,8 +55,8 @@ public class AstRoot extends ScriptNode {
 		object.addProperty("type", "Program");
 		object.add("body", array);
 		object.addProperty("sourceType", "script");
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
     		return object;
     }
 

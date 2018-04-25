@@ -32,8 +32,8 @@ public class ExpressionStatement extends AstNode {
     		JsonObject object = new JsonObject();
 		object.addProperty("type", "ExpressionStatement");
 		object.add("expression", this.getExpression().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

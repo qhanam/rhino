@@ -192,8 +192,8 @@ public class InfixExpression extends AstNode {
 		object.addProperty("operator", operator);
 		object.add("left", this.getLeft().getJsonObject());
 		object.add("right", this.getRight().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

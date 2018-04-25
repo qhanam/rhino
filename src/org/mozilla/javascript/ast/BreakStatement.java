@@ -49,8 +49,8 @@ public class BreakStatement extends Jump {
 		object.addProperty("type", "BreakStatement");
 		if(this.getBreakLabel() != null) object.add("label", this.getBreakLabel().getJsonObject());
 		else object.add("label", JsonNull.INSTANCE);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
     		return object;
     }
 

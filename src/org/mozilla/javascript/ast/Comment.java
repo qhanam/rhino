@@ -82,8 +82,8 @@ public class Comment extends AstNode {
     		}
 		object.addProperty("type", type);
 		object.addProperty("value", this.getValue());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

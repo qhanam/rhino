@@ -50,8 +50,8 @@ public class LabeledStatement extends AstNode {
 		object.addProperty("type", "LabeledStatement");
 		object.add("label", this.getLabels().get(0).getJsonObject());
 		object.add("body", this.getStatement().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
 	}
 

@@ -95,8 +95,8 @@ public class ElementGet extends AstNode {
 		object.addProperty("computed", true);
 		object.add("object", this.getTarget().getJsonObject());
 		object.add("property", this.getElement().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

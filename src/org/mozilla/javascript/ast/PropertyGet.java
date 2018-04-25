@@ -44,8 +44,8 @@ public class PropertyGet extends InfixExpression {
 		object.addProperty("computed", false);
 		object.add("object", this.getTarget().getJsonObject());
 		object.add("property", this.getProperty().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

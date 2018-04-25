@@ -55,8 +55,8 @@ public class ForLoop extends Loop {
 		if(this.getIncrement() instanceof EmptyExpression) object.add("update", JsonNull.INSTANCE);
 		else object.add("update", this.getIncrement().getJsonObject());
 		object.add("body", this.getBody().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

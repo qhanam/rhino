@@ -55,8 +55,8 @@ public class NewExpression extends FunctionCall {
 		object.addProperty("type", "NewExpression");
 		object.add("callee", this.getTarget().getJsonObject());
 		object.add("arguments", array);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

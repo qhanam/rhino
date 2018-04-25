@@ -49,8 +49,8 @@ public class Block extends AstNode {
     			array.add(((AstNode)element).getJsonObject());
 		object.addProperty("type", "BlockStatement");
 		object.add("body", array);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
     		return object;
     }
 

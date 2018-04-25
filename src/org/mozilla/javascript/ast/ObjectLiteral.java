@@ -69,8 +69,8 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
     			array.add(property.getJsonObject());
 		object.addProperty("type", "ObjectExpression");
 		object.add("properties", array);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

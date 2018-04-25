@@ -52,8 +52,8 @@ public class ReturnStatement extends AstNode {
 		object.addProperty("type", "ReturnStatement");
 		if(this.getReturnValue() != null) object.add("argument", this.getReturnValue().getJsonObject());
 		else object.add("argument", JsonNull.INSTANCE);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

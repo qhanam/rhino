@@ -58,8 +58,8 @@ public class ThrowStatement extends AstNode {
     		JsonObject object = new JsonObject();
 		object.addProperty("type", "ThrowStatement");
 		object.add("argument", this.getExpression().getJsonObject());
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

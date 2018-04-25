@@ -85,11 +85,21 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     protected boolean moved;
 
     /** 
-     * The change type from AST differencing. 
+     * The change type from AST differencing.
+     * INSERT/DELETE: This node or its parent was inserted or removed.
+     * UPDATED: The contents of this node or one of its descendants was changed.
      * @author qhanam
      **/
     protected ChangeType changeType;
 
+    /**
+     * The change type from AST differencing without propagation.
+     * INSERT/DELETE: This node and its unlabeled descendants was inserted or removed.
+     * UPDATED: This node's value was changed.
+     * @author qhanam
+     **/
+    protected ChangeType changeTypeNoProp;
+    
     /** 
      * The source or destination node that this node maps to. 
      * @author qhanam
@@ -175,9 +185,13 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
     	this.changeType = changeType;
     }
     
+    /**
+     * @param changeType The non-propagated change applied to this node from AST differencing.
+     * @author qhanam
+     */
     @Override
-    public boolean isMoved() {
-		return this.moved;
+    public void setChangeTypeNoProp(ChangeType changeTypeNoProp) {
+    	this.changeTypeNoProp = changeTypeNoProp;
     }
 
     /**
@@ -186,7 +200,16 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      */
     @Override
 	public ChangeType getChangeType() {
-    	return this.changeType;
+		return this.changeType;
+    }
+    
+    /**
+     * @return The non-propagated change applied to this node from AST differencing.
+     * @author qhanam
+     */
+    @Override
+    public ChangeType getChangeTypeNoProp() {
+		return this.changeTypeNoProp;
     }
     
     @Override

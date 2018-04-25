@@ -53,34 +53,36 @@ public class KeywordLiteral extends AstNode {
     		case Token.THIS:
 			object.addProperty("type", "ThisExpression");
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change", changeType.toString());
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		case Token.TRUE:
 			object.addProperty("type", "Literal");
 			object.addProperty("value", true);
 			object.addProperty("raw", "true");
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		case Token.FALSE:
 			object.addProperty("type", "Literal");
 			object.addProperty("value", false);
 			object.addProperty("raw", "false");
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change", changeType.toString());
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		case Token.DEBUGGER:
 			object.addProperty("type", "DebuggerStatement");
 			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		case Token.NULL:
     		default:
 			object.addProperty("type", "Literal");
 			object.addProperty("value", (String)null);
 			object.addProperty("raw", "null");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("moved", String.valueOf(isMoved()));
+    			object.addProperty("change", changeType.toString());
+    			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		}
 

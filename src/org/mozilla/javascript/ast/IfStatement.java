@@ -54,8 +54,8 @@ public class IfStatement extends AstNode {
 		object.add("consequent", this.getThenPart().getJsonObject());
 		if(this.getElsePart() != null) object.add("alternate", this.getElsePart().getJsonObject());
 		else object.add("alternate", JsonNull.INSTANCE);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

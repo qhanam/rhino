@@ -74,8 +74,8 @@ public class SwitchStatement extends Jump {
 		object.addProperty("type", "SwitchStatement");
 		object.add("discriminant", this.getExpression().getJsonObject());
 		object.add("cases", array);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;
     }
 

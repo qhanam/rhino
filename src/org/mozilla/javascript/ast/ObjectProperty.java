@@ -77,8 +77,8 @@ public class ObjectProperty extends InfixExpression {
 		object.addProperty("kind", "init");
 		object.addProperty("method", false);
 		object.addProperty("shorthand", false);
-		object.addProperty("change", changeType.toString());
-		object.addProperty("moved", String.valueOf(isMoved()));
+    		object.addProperty("change", changeType.toString());
+    		object.addProperty("change-noprop", changeTypeNoProp.toString());
     		return object;
     }
 
