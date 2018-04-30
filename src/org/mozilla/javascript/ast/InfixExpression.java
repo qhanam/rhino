@@ -92,6 +92,7 @@ public class InfixExpression extends AstNode {
     		case Token.LT:
     		case Token.LE:
     		case Token.IN:
+    		case Token.INSTANCEOF:
     			type = "BinaryExpression";
     			break;
     		case Token.ADD: // Arithmetic Operators
@@ -160,6 +161,8 @@ public class InfixExpression extends AstNode {
     			operator = "<="; break;
     		case Token.IN:
     			operator = "in"; break;
+    		case Token.INSTANCEOF:
+    			operator = "instanceof"; break;
     		case Token.ADD: // Arithmetic Operators
     			operator = "+"; break;
     		case Token.SUB:

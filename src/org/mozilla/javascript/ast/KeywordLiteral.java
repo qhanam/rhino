@@ -53,7 +53,6 @@ public class KeywordLiteral extends AstNode {
     		case Token.THIS:
 			object.addProperty("type", "ThisExpression");
 			object.addProperty("change", changeType.toString());
-			object.addProperty("change", changeType.toString());
 			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
     		case Token.TRUE:
@@ -67,7 +66,6 @@ public class KeywordLiteral extends AstNode {
 			object.addProperty("type", "Literal");
 			object.addProperty("value", false);
 			object.addProperty("raw", "false");
-			object.addProperty("change", changeType.toString());
 			object.addProperty("change", changeType.toString());
 			object.addProperty("change-noprop", changeTypeNoProp.toString());
 			return object;
