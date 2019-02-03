@@ -67,7 +67,9 @@ public class ForInLoop extends Loop {
     	/* Get the shallow clone. */
     	ForInLoop clone = (ForInLoop)super.clone();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

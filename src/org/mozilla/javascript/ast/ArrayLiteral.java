@@ -88,7 +88,9 @@ public class ArrayLiteral extends AstNode implements DestructuringForm {
     	/* Get the shallow clone. */
     	ArrayLiteral clone = new ArrayLiteral();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = fixedPosition;
     	clone.ID = this.ID;
 

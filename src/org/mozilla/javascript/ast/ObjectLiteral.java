@@ -85,7 +85,9 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
     	/* Get the shallow clone. */
     	ObjectLiteral clone = new ObjectLiteral();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

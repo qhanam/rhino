@@ -137,7 +137,9 @@ public class UnaryExpression extends AstNode {
     	/* Get the shallow clone. */
     	UnaryExpression clone = (UnaryExpression)super.clone();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

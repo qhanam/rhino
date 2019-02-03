@@ -84,7 +84,9 @@ public class SwitchCase extends AstNode {
     	/* Get the shallow clone. */
     	SwitchCase clone = new SwitchCase();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

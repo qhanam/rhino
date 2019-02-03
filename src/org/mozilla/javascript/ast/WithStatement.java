@@ -64,7 +64,9 @@ public class WithStatement extends AstNode {
     	/* Get the shallow clone. */
     	WithStatement clone = (WithStatement)super.clone();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

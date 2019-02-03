@@ -48,7 +48,9 @@ public class ExpressionStatement extends AstNode {
     	/* Get the shallow clone. */
     	ExpressionStatement clone = (ExpressionStatement)super.clone();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

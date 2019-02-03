@@ -173,7 +173,16 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      */
     @Override
     public void setMoved(boolean moved) {
-    	this.moved = moved;
+		this.moved = moved;
+    }
+    
+    /**
+     * @return {@code true} if this node has a 'moved' edit operation applied by
+     * AST differencing.
+     * @author qhanam
+     */
+    public boolean getIsMoved() {
+    		return this.moved;
     }
 
     /**
@@ -256,6 +265,8 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
         try {
 			AstNode clone = (AstNode) super.clone();
 			clone.changeType = this.changeType;
+			clone.changeTypeNoProp = this.changeTypeNoProp;
+			clone.moved = this.moved;
 			clone.fixedPosition = this.fixedPosition;
 			clone.ID = this.ID;
 			return clone;
@@ -277,6 +288,9 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
 
     	clone.setParent(parent);
     	clone.fixedPosition = fixedPosition;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.moved = this.moved;
     	return clone;
 
     }
@@ -405,7 +419,9 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
 
     public AstNode() {
         super(Token.ERROR);
-        this.changeType = ChangeType.UNCHANGED;
+        this.changeType = ChangeType.UNKNOWN;
+        this.changeTypeNoProp = ChangeType.UNKNOWN;
+        this.moved = false;
     }
 
     /**
@@ -414,7 +430,10 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      */
     public AstNode(int pos) {
         this();
-        position = pos;
+        this.position = pos;
+        this.changeType = ChangeType.UNKNOWN;
+        this.changeTypeNoProp = ChangeType.UNKNOWN;
+        this.moved = false;
     }
 
     /**
@@ -425,8 +444,11 @@ public abstract class AstNode extends Node implements Comparable<AstNode>, Class
      */
     public AstNode(int pos, int len) {
         this();
-        position = pos;
-        length = len;
+        this.position = pos;
+        this.length = len;
+        this.changeType = ChangeType.UNKNOWN;
+        this.changeTypeNoProp = ChangeType.UNKNOWN;
+        this.moved = false;
     }
 
     /**

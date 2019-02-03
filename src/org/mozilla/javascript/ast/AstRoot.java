@@ -71,7 +71,9 @@ public class AstRoot extends ScriptNode {
     	/* Get the shallow clone. */
     	AstRoot clone = (AstRoot)super.clone();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

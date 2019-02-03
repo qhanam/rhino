@@ -62,7 +62,9 @@ public class DoLoop extends Loop {
     	/* Get the shallow clone. */
     	DoLoop clone = (DoLoop)super.clone();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

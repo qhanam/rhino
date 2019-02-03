@@ -78,7 +78,9 @@ public class VariableDeclaration extends AstNode {
     	/* Get the shallow clone. */
     	VariableDeclaration clone = new VariableDeclaration();
     	clone.setParent(parent);
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 

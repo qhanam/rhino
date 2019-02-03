@@ -39,7 +39,7 @@ public class EmptyExpression extends AstNode {
     @Override
     public JsonObject getJsonObject() {
     		JsonObject object = new JsonObject();
-		object.addProperty("type", "EmptyStatement");
+		object.addProperty("type", "EmptyExpression");
     		object.addProperty("change", changeType.toString());
     		object.addProperty("change-noprop", changeTypeNoProp.toString());
 		return object;

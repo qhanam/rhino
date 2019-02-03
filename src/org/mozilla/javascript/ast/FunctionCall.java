@@ -75,7 +75,9 @@ public class FunctionCall extends AstNode {
     	FunctionCall clone = new FunctionCall();
     	clone.setParent(parent);
     	clone.setLineno(this.getLineno());
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
     	clone.mappedNode = this.mappedNode;

@@ -186,7 +186,9 @@ public class FunctionNode extends ScriptNode {
     	FunctionNode clone = new FunctionNode();
     	clone.setParent(parent);
     	clone.setLineno(this.getLineno());
+    	clone.moved = this.moved;
     	clone.changeType = this.changeType;
+    	clone.changeTypeNoProp = this.changeTypeNoProp;
     	clone.fixedPosition = this.fixedPosition;
     	clone.ID = this.ID;
 
