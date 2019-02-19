@@ -11,24 +11,25 @@ import org.mozilla.javascript.Token;
 import com.google.gson.JsonObject;
 
 /**
- * AST node for an empty statement.  Node type is {@link Token#EMPTY}.<p>
+ * AST node for an empty statement. Node type is {@link Token#EMPTY}.
+ * <p>
  *
  */
 public class EmptyStatement extends AstNode {
 
     {
-        type = Token.EMPTY;
+	type = Token.EMPTY;
     }
 
     public EmptyStatement() {
     }
 
     public EmptyStatement(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public EmptyStatement(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -37,30 +38,32 @@ public class EmptyStatement extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "EmptyStatement");
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
-}
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "EmptyStatement");
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
+    }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth)).append(";\n");
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth)).append(";\n");
+	return sb.toString();
     }
 
     /**
-     * Visits this node.  There are no children.
+     * Visits this node. There are no children.
      */
     @Override
     public void visit(NodeVisitor v) {
-        v.visit(this);
+	v.visit(this);
     }
 
-	@Override
-	public boolean isStatement() {
-		return true;
-	}
+    @Override
+    public boolean isStatement() {
+	return true;
+    }
 }

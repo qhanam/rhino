@@ -11,10 +11,13 @@ import org.mozilla.javascript.Token;
 import com.google.gson.JsonObject;
 
 /**
- * Do statement.  Node type is {@link Token#DO}.<p>
+ * Do statement. Node type is {@link Token#DO}.
+ * <p>
  *
- * <pre><i>DoLoop</i>:
- * <b>do</b> Statement <b>while</b> <b>(</b> Expression <b>)</b> <b>;</b></pre>
+ * <pre>
+ * <i>DoLoop</i>:
+ * <b>do</b> Statement <b>while</b> <b>(</b> Expression <b>)</b> <b>;</b>
+ * </pre>
  */
 public class DoLoop extends Loop {
 
@@ -22,18 +25,18 @@ public class DoLoop extends Loop {
     private int whilePosition = -1;
 
     {
-        type = Token.DO;
+	type = Token.DO;
     }
 
     public DoLoop() {
     }
 
     public DoLoop(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public DoLoop(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -42,43 +45,48 @@ public class DoLoop extends Loop {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "DoWhileStatement");
-		object.add("test", this.getCondition().getJsonObject());
-		object.add("body", this.getBody().getJsonObject());
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "DoWhileStatement");
+	object.add("test", this.getCondition().getJsonObject());
+	object.add("body", this.getBody().getJsonObject());
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	DoLoop clone = (DoLoop)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	DoLoop clone = (DoLoop) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	AstNode condition = null;
-    	AstNode body = null;
+	/* Clone the children. */
+	AstNode condition = null;
+	AstNode body = null;
 
-    	if(this.getCondition() != null) condition = this.getCondition().clone(clone);
-    	if(this.getBody() != null) body = this.getBody().clone(clone);
+	if (this.getCondition() != null)
+	    condition = this.getCondition().clone(clone);
+	if (this.getBody() != null)
+	    body = this.getBody().clone(clone);
 
-    	clone.setCondition(condition);
-    	clone.setBody(body);
+	clone.setCondition(condition);
+	clone.setBody(body);
 
-    	return clone;
+	return clone;
 
     }
 
@@ -86,43 +94,45 @@ public class DoLoop extends Loop {
      * Returns loop condition
      */
     public AstNode getCondition() {
-        return condition;
+	return condition;
     }
 
     /**
      * Sets loop condition, and sets its parent to this node.
-     * @throws IllegalArgumentException if condition is null
+     * 
+     * @throws IllegalArgumentException
+     *             if condition is null
      */
     public void setCondition(AstNode condition) {
-        assertNotNull(condition);
-        this.condition = condition;
-        condition.setParent(this);
+	assertNotNull(condition);
+	this.condition = condition;
+	condition.setParent(this);
     }
 
     /**
      * Returns source position of "while" keyword
      */
     public int getWhilePosition() {
-        return whilePosition;
+	return whilePosition;
     }
 
     /**
      * Sets source position of "while" keyword
      */
     public void setWhilePosition(int whilePosition) {
-        this.whilePosition = whilePosition;
+	this.whilePosition = whilePosition;
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append("do ");
-        sb.append(body.toSource(depth).trim());
-        sb.append(" while (");
-        sb.append(condition.toSource(0));
-        sb.append(");\n");
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append("do ");
+	sb.append(body.toSource(depth).trim());
+	sb.append(" while (");
+	sb.append(condition.toSource(0));
+	sb.append(");\n");
+	return sb.toString();
     }
 
     /**
@@ -130,9 +140,9 @@ public class DoLoop extends Loop {
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            body.visit(v);
-            condition.visit(v);
-        }
+	if (v.visit(this)) {
+	    body.visit(v);
+	    condition.visit(v);
+	}
     }
 }

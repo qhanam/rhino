@@ -6,18 +6,22 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
 
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
- * C-style for-loop statement.
- * Node type is {@link Token#FOR}.<p>
+ * C-style for-loop statement. Node type is {@link Token#FOR}.
+ * <p>
  *
- * <pre><b>for</b> ( ExpressionNoInopt; Expressionopt ; Expressionopt ) Statement</pre>
- * <pre><b>for</b> ( <b>var</b> VariableDeclarationListNoIn; Expressionopt ; Expressionopt ) Statement</pre>
+ * <pre>
+ * <b>for</b> ( ExpressionNoInopt; Expressionopt ; Expressionopt ) Statement
+ * </pre>
+ * 
+ * <pre>
+ * <b>for</b> ( <b>var</b> VariableDeclarationListNoIn; Expressionopt ; Expressionopt ) Statement
+ * </pre>
  */
 public class ForLoop extends Loop {
 
@@ -26,18 +30,18 @@ public class ForLoop extends Loop {
     private AstNode increment;
 
     {
-        type = Token.FOR;
+	type = Token.FOR;
     }
 
     public ForLoop() {
     }
 
     public ForLoop(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public ForLoop(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -46,150 +50,171 @@ public class ForLoop extends Loop {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "ForStatement");
-		if(this.getInitializer() instanceof EmptyExpression) object.add("init", JsonNull.INSTANCE);
-		else object.add("init", this.getInitializer().getJsonObject());
-		if(this.getCondition() instanceof EmptyExpression) object.add("test", JsonNull.INSTANCE);
-		else object.add("test", this.getCondition().getJsonObject());
-		if(this.getIncrement() instanceof EmptyExpression) object.add("update", JsonNull.INSTANCE);
-		else object.add("update", this.getIncrement().getJsonObject());
-		object.add("body", this.getBody().getJsonObject());
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "ForStatement");
+	if (this.getInitializer() instanceof EmptyExpression)
+	    object.add("init", JsonNull.INSTANCE);
+	else
+	    object.add("init", this.getInitializer().getJsonObject());
+	if (this.getCondition() instanceof EmptyExpression)
+	    object.add("test", JsonNull.INSTANCE);
+	else
+	    object.add("test", this.getCondition().getJsonObject());
+	if (this.getIncrement() instanceof EmptyExpression)
+	    object.add("update", JsonNull.INSTANCE);
+	else
+	    object.add("update", this.getIncrement().getJsonObject());
+	object.add("body", this.getBody().getJsonObject());
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	ForLoop clone = (ForLoop)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	ForLoop clone = (ForLoop) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	AstNode initializer = null;
-    	AstNode increment = null;
-    	AstNode condition = null;
-    	AstNode body = null;
+	/* Clone the children. */
+	AstNode initializer = null;
+	AstNode increment = null;
+	AstNode condition = null;
+	AstNode body = null;
 
-    	if(this.getInitializer() != null) initializer = this.getInitializer().clone(clone);
-    	if(this.getIncrement() != null) increment = this.getIncrement().clone(clone);
-    	if(this.getCondition() != null) condition = this.getCondition().clone(clone);
-    	if(this.getBody() != null) body = this.getBody().clone(clone);
+	if (this.getInitializer() != null)
+	    initializer = this.getInitializer().clone(clone);
+	if (this.getIncrement() != null)
+	    increment = this.getIncrement().clone(clone);
+	if (this.getCondition() != null)
+	    condition = this.getCondition().clone(clone);
+	if (this.getBody() != null)
+	    body = this.getBody().clone(clone);
 
-    	clone.setInitializer(initializer);
-    	clone.setIncrement(increment);
-    	clone.setCondition(condition);
-    	clone.setBody(body);
+	clone.setInitializer(initializer);
+	clone.setIncrement(increment);
+	clone.setCondition(condition);
+	clone.setBody(body);
 
-    	return clone;
+	return clone;
 
     }
 
     /**
-     * Returns loop initializer variable declaration list.
-     * This is either a {@link VariableDeclaration}, an
-     * {@link Assignment}, or an {@link InfixExpression} of
-     * type COMMA that chains multiple variable assignments.
+     * Returns loop initializer variable declaration list. This is either a
+     * {@link VariableDeclaration}, an {@link Assignment}, or an
+     * {@link InfixExpression} of type COMMA that chains multiple variable
+     * assignments.
      */
     public AstNode getInitializer() {
-        return initializer;
+	return initializer;
     }
 
     /**
-     * Sets loop initializer expression, and sets its parent
-     * to this node.  Virtually any expression can be in the initializer,
-     * so no error-checking is done other than a {@code null}-check.
-     * @param initializer loop initializer.  Pass an
-     * {@link EmptyExpression} if the initializer is not specified.
-     * @throws IllegalArgumentException if condition is {@code null}
+     * Sets loop initializer expression, and sets its parent to this node. Virtually
+     * any expression can be in the initializer, so no error-checking is done other
+     * than a {@code null}-check.
+     * 
+     * @param initializer
+     *            loop initializer. Pass an {@link EmptyExpression} if the
+     *            initializer is not specified.
+     * @throws IllegalArgumentException
+     *             if condition is {@code null}
      */
     public void setInitializer(AstNode initializer) {
-        assertNotNull(initializer);
-        this.initializer = initializer;
-        initializer.setParent(this);
+	assertNotNull(initializer);
+	this.initializer = initializer;
+	initializer.setParent(this);
     }
 
     /**
      * Returns loop condition
      */
     public AstNode getCondition() {
-        return condition;
+	return condition;
     }
 
     /**
      * Sets loop condition, and sets its parent to this node.
-     * @param condition loop condition.  Pass an {@link EmptyExpression}
-     * if the condition is missing.
-     * @throws IllegalArgumentException} if condition is {@code null}
+     * 
+     * @param condition
+     *            loop condition. Pass an {@link EmptyExpression} if the condition
+     *            is missing.
+     * @throws IllegalArgumentException}
+     *             if condition is {@code null}
      */
     public void setCondition(AstNode condition) {
-        assertNotNull(condition);
-        this.condition = condition;
-        condition.setParent(this);
+	assertNotNull(condition);
+	this.condition = condition;
+	condition.setParent(this);
     }
 
     /**
      * Returns loop increment expression
      */
     public AstNode getIncrement() {
-        return increment;
+	return increment;
     }
 
     /**
-     * Sets loop increment expression, and sets its parent to
-     * this node.
-     * @param increment loop increment expression.  Pass an
-     * {@link EmptyExpression} if increment is {@code null}.
-     * @throws IllegalArgumentException} if increment is {@code null}
+     * Sets loop increment expression, and sets its parent to this node.
+     * 
+     * @param increment
+     *            loop increment expression. Pass an {@link EmptyExpression} if
+     *            increment is {@code null}.
+     * @throws IllegalArgumentException}
+     *             if increment is {@code null}
      */
     public void setIncrement(AstNode increment) {
-        assertNotNull(increment);
-        this.increment = increment;
-        increment.setParent(this);
+	assertNotNull(increment);
+	this.increment = increment;
+	increment.setParent(this);
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append("for (");
-        sb.append(initializer.toSource(0));
-        sb.append("; ");
-        sb.append(condition.toSource(0));
-        sb.append("; ");
-        sb.append(increment.toSource(0));
-        sb.append(") ");
-        if (body.getType() == Token.BLOCK) {
-            sb.append(body.toSource(depth).trim()).append("\n");
-        } else {
-            sb.append("\n").append(body.toSource(depth+1));
-        }
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append("for (");
+	sb.append(initializer.toSource(0));
+	sb.append("; ");
+	sb.append(condition.toSource(0));
+	sb.append("; ");
+	sb.append(increment.toSource(0));
+	sb.append(") ");
+	if (body.getType() == Token.BLOCK) {
+	    sb.append(body.toSource(depth).trim()).append("\n");
+	} else {
+	    sb.append("\n").append(body.toSource(depth + 1));
+	}
+	return sb.toString();
     }
 
     /**
-     * Visits this node, the initializer expression, the loop condition
-     * expression, the increment expression, and then the loop body.
+     * Visits this node, the initializer expression, the loop condition expression,
+     * the increment expression, and then the loop body.
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            initializer.visit(v);
-            condition.visit(v);
-            increment.visit(v);
-            body.visit(v);
-        }
+	if (v.visit(this)) {
+	    initializer.visit(v);
+	    condition.visit(v);
+	    increment.visit(v);
+	    body.visit(v);
+	}
     }
 }

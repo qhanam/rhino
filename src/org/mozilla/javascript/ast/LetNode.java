@@ -6,25 +6,27 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
- * AST node for let statements and expressions.
- * Node type is {@link Token#LET} or {@link Token#LETEXPR}.<p>
+ * AST node for let statements and expressions. Node type is {@link Token#LET}
+ * or {@link Token#LETEXPR}.
+ * <p>
  *
- * <pre> <i>LetStatement</i>:
+ * <pre>
+ *  <i>LetStatement</i>:
  *     <b>let</b> ( VariableDeclarationList ) Block
  * <i>LetExpression</i>:
- *     <b>let</b> ( VariableDeclarationList ) Expression</pre>
+ *     <b>let</b> ( VariableDeclarationList ) Expression
+ * </pre>
  *
- * Note that standalone let-statements with no parens or body block,
- * such as {@code let x=6, y=7;}, are represented as a
- * {@link VariableDeclaration} node of type {@code Token.LET},
- * wrapped with an {@link ExpressionStatement}.<p>
+ * Note that standalone let-statements with no parens or body block, such as
+ * {@code let x=6, y=7;}, are represented as a {@link VariableDeclaration} node
+ * of type {@code Token.LET}, wrapped with an {@link ExpressionStatement}.
+ * <p>
  */
 public class LetNode extends Scope {
 
@@ -34,18 +36,18 @@ public class LetNode extends Scope {
     private int rp = -1;
 
     {
-        type = Token.LETEXPR;
+	type = Token.LETEXPR;
     }
 
     public LetNode() {
     }
 
     public LetNode(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public LetNode(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -54,120 +56,125 @@ public class LetNode extends Scope {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-    		JsonArray array = new JsonArray();
-    		for(VariableInitializer initializer : this.getVariables().getVariables())
-    			array.add(initializer.getJsonObject());
-		object.addProperty("type", "VariableDeclaration");
-		object.add("declarations", array);
-		object.addProperty("kind", "let");
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	JsonArray array = new JsonArray();
+	for (VariableInitializer initializer : this.getVariables().getVariables())
+	    array.add(initializer.getJsonObject());
+	object.addProperty("type", "VariableDeclaration");
+	object.add("declarations", array);
+	object.addProperty("kind", "let");
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Returns variable list
      */
     public VariableDeclaration getVariables() {
-        return variables;
+	return variables;
     }
 
     /**
-     * Sets variable list.  Sets list parent to this node.
-     * @throws IllegalArgumentException if variables is {@code null}
+     * Sets variable list. Sets list parent to this node.
+     * 
+     * @throws IllegalArgumentException
+     *             if variables is {@code null}
      */
     public void setVariables(VariableDeclaration variables) {
-        assertNotNull(variables);
-        this.variables = variables;
-        variables.setParent(this);
+	assertNotNull(variables);
+	this.variables = variables;
+	variables.setParent(this);
     }
 
     /**
-     * Returns body statement or expression.  Body is {@code null} if the
-     * form of the let statement is similar to a VariableDeclaration, with no
-     * curly-brace.  (This form is used to define let-bound variables in the
-     * scope of the current block.)<p>
+     * Returns body statement or expression. Body is {@code null} if the form of the
+     * let statement is similar to a VariableDeclaration, with no curly-brace. (This
+     * form is used to define let-bound variables in the scope of the current
+     * block.)
+     * <p>
      *
      * @return the body form
      */
     public AstNode getBody() {
-        return body;
+	return body;
     }
 
     /**
-     * Sets body statement or expression.  Also sets the body parent to this
-     * node.
-     * @param body the body statement or expression.  May be
-     * {@code null}.
+     * Sets body statement or expression. Also sets the body parent to this node.
+     * 
+     * @param body
+     *            the body statement or expression. May be {@code null}.
      */
     public void setBody(AstNode body) {
-        this.body = body;
-        if (body != null)
-            body.setParent(this);
+	this.body = body;
+	if (body != null)
+	    body.setParent(this);
     }
 
     /**
      * Returns left paren position, -1 if missing
      */
     public int getLp() {
-        return lp;
+	return lp;
     }
 
     /**
      * Sets left paren position
      */
     public void setLp(int lp) {
-        this.lp = lp;
+	this.lp = lp;
     }
 
     /**
      * Returns right paren position, -1 if missing
      */
     public int getRp() {
-        return rp;
+	return rp;
     }
 
     /**
      * Sets right paren position
      */
     public void setRp(int rp) {
-        this.rp = rp;
+	this.rp = rp;
     }
 
     /**
      * Sets both paren positions
      */
     public void setParens(int lp, int rp) {
-        this.lp = lp;
-        this.rp = rp;
+	this.lp = lp;
+	this.rp = rp;
     }
 
     @Override
     public String toSource(int depth) {
-        String pad = makeIndent(depth);
-        StringBuilder sb = new StringBuilder();
-        sb.append(pad);
-        sb.append("let (");
-        printList(variables.getVariables(), sb);
-        sb.append(") ");
-        if (body != null) {
-            sb.append(body.toSource(depth));
-        }
-        return sb.toString();
+	String pad = makeIndent(depth);
+	StringBuilder sb = new StringBuilder();
+	sb.append(pad);
+	sb.append("let (");
+	printList(variables.getVariables(), sb);
+	sb.append(") ");
+	if (body != null) {
+	    sb.append(body.toSource(depth));
+	}
+	return sb.toString();
     }
 
     /**
-     * Visits this node, the variable list, and if present, the body
-     * expression or statement.
+     * Visits this node, the variable list, and if present, the body expression or
+     * statement.
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            variables.visit(v);
-            if (body != null) {
-                body.visit(v);
-            }
-        }
+	if (v.visit(this)) {
+	    variables.visit(v);
+	    if (body != null) {
+		body.visit(v);
+	    }
+	}
     }
 }

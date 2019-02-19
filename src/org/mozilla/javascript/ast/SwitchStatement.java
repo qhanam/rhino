@@ -11,16 +11,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonArray;
-
 import org.mozilla.javascript.Token;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 /**
- * Switch statement AST node type.
- * Node type is {@link Token#SWITCH}.<p>
+ * Switch statement AST node type. Node type is {@link Token#SWITCH}.
+ * <p>
  *
- * <pre><i>SwitchStatement</i> :
+ * <pre>
+ * <i>SwitchStatement</i> :
  *        <b>switch</b> ( Expression ) CaseBlock
  * <i>CaseBlock</i> :
  *        { [CaseClauses] }
@@ -31,12 +32,13 @@ import org.mozilla.javascript.Token;
  * <i>CaseClause</i> :
  *        <b>case</b> Expression : [StatementList]
  * <i>DefaultClause</i> :
- *        <b>default</b> : [StatementList]</pre>
+ *        <b>default</b> : [StatementList]
+ * </pre>
  */
 public class SwitchStatement extends Jump {
 
-    private static final List<SwitchCase> NO_CASES =
-        Collections.unmodifiableList(new ArrayList<SwitchCase>());
+    private static final List<SwitchCase> NO_CASES = Collections
+	    .unmodifiableList(new ArrayList<SwitchCase>());
 
     private AstNode expression;
     private List<SwitchCase> cases;
@@ -44,20 +46,20 @@ public class SwitchStatement extends Jump {
     private int rp = -1;
 
     {
-        type = Token.SWITCH;
+	type = Token.SWITCH;
     }
 
     public SwitchStatement() {
     }
 
     public SwitchStatement(int pos) {
-        // can't call super (Jump) for historical reasons
-        position = pos;
+	// can't call super (Jump) for historical reasons
+	position = pos;
     }
 
     public SwitchStatement(int pos, int len) {
-        position = pos;
-        length = len;
+	position = pos;
+	length = len;
     }
 
     /**
@@ -66,48 +68,53 @@ public class SwitchStatement extends Jump {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-    		JsonArray array = new JsonArray();
-    		for(AstNode switchCase : this.getCases()) {
-    			array.add(switchCase.getJsonObject());
-    		}
-		object.addProperty("type", "SwitchStatement");
-		object.add("discriminant", this.getExpression().getJsonObject());
-		object.add("cases", array);
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	JsonArray array = new JsonArray();
+	for (AstNode switchCase : this.getCases()) {
+	    array.add(switchCase.getJsonObject());
+	}
+	object.addProperty("type", "SwitchStatement");
+	object.add("discriminant", this.getExpression().getJsonObject());
+	object.add("cases", array);
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	SwitchStatement clone = new SwitchStatement();
-    	clone.setParent(parent);
-    	clone.setLineno(this.getLineno());
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	SwitchStatement clone = new SwitchStatement();
+	clone.setParent(parent);
+	clone.setLineno(this.getLineno());
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	List<SwitchCase> cases = new LinkedList<SwitchCase>();
-    	AstNode expression = null;
+	/* Clone the children. */
+	List<SwitchCase> cases = new LinkedList<SwitchCase>();
+	AstNode expression = null;
 
-    	for(SwitchCase cas : this.getCases()) cases.add((SwitchCase)cas.clone(clone));
-    	if(this.getExpression() != null) expression = this.getExpression().clone(clone);
+	for (SwitchCase cas : this.getCases())
+	    cases.add((SwitchCase) cas.clone(clone));
+	if (this.getExpression() != null)
+	    expression = this.getExpression().clone(clone);
 
-    	clone.setCases(cases);
-    	clone.setExpression(expression);
+	clone.setCases(cases);
+	clone.setExpression(expression);
 
-    	return clone;
+	return clone;
 
     }
 
@@ -115,122 +122,127 @@ public class SwitchStatement extends Jump {
      * Returns the switch discriminant expression
      */
     public AstNode getExpression() {
-        return expression;
+	return expression;
     }
 
     /**
-     * Sets the switch discriminant expression, and sets its parent
-     * to this node.
-     * @throws IllegalArgumentException} if expression is {@code null}
+     * Sets the switch discriminant expression, and sets its parent to this node.
+     * 
+     * @throws IllegalArgumentException}
+     *             if expression is {@code null}
      */
     public void setExpression(AstNode expression) {
-        assertNotNull(expression);
-        this.expression = expression;
-        expression.setParent(this);
+	assertNotNull(expression);
+	this.expression = expression;
+	expression.setParent(this);
     }
 
     /**
-     * Returns case statement list.  If there are no cases,
-     * returns an immutable empty list.
+     * Returns case statement list. If there are no cases, returns an immutable
+     * empty list.
      */
     public List<SwitchCase> getCases() {
-        return cases != null ? cases : NO_CASES;
+	return cases != null ? cases : NO_CASES;
     }
 
     /**
-     * Sets case statement list, and sets the parent of each child
-     * case to this node.
-     * @param cases list, which may be {@code null} to remove all the cases
+     * Sets case statement list, and sets the parent of each child case to this
+     * node.
+     * 
+     * @param cases
+     *            list, which may be {@code null} to remove all the cases
      */
     public void setCases(List<SwitchCase> cases) {
-        if (cases == null) {
-            this.cases = null;
-        } else {
-            if (this.cases != null)
-                this.cases.clear();
-            for (SwitchCase sc : cases)
-                addCase(sc);
-        }
+	if (cases == null) {
+	    this.cases = null;
+	} else {
+	    if (this.cases != null)
+		this.cases.clear();
+	    for (SwitchCase sc : cases)
+		addCase(sc);
+	}
     }
 
     /**
      * Adds a switch case statement to the end of the list.
-     * @throws IllegalArgumentException} if switchCase is {@code null}
+     * 
+     * @throws IllegalArgumentException}
+     *             if switchCase is {@code null}
      */
     public void addCase(SwitchCase switchCase) {
-        assertNotNull(switchCase);
-        if (cases == null) {
-            cases = new ArrayList<SwitchCase>();
-        }
-        cases.add(switchCase);
-        switchCase.setParent(this);
+	assertNotNull(switchCase);
+	if (cases == null) {
+	    cases = new ArrayList<SwitchCase>();
+	}
+	cases.add(switchCase);
+	switchCase.setParent(this);
     }
 
     /**
      * Returns left paren position, -1 if missing
      */
     public int getLp() {
-        return lp;
+	return lp;
     }
 
     /**
      * Sets left paren position
      */
     public void setLp(int lp) {
-        this.lp = lp;
+	this.lp = lp;
     }
 
     /**
      * Returns right paren position, -1 if missing
      */
     public int getRp() {
-        return rp;
+	return rp;
     }
 
     /**
      * Sets right paren position
      */
     public void setRp(int rp) {
-        this.rp = rp;
+	this.rp = rp;
     }
 
     /**
      * Sets both paren positions
      */
     public void setParens(int lp, int rp) {
-        this.lp = lp;
-        this.rp = rp;
+	this.lp = lp;
+	this.rp = rp;
     }
 
     @Override
     public String toSource(int depth) {
-        String pad = makeIndent(depth);
-        StringBuilder sb = new StringBuilder();
-        sb.append(pad);
-        sb.append("switch (");
-        sb.append(expression.toSource(0));
-        sb.append(") {\n");
-        if (cases != null) {
-            for (SwitchCase sc : cases) {
-                sb.append(sc.toSource(depth + 1));
-            }
-        }
-        sb.append(pad);
-        sb.append("}\n");
-        return sb.toString();
+	String pad = makeIndent(depth);
+	StringBuilder sb = new StringBuilder();
+	sb.append(pad);
+	sb.append("switch (");
+	sb.append(expression.toSource(0));
+	sb.append(") {\n");
+	if (cases != null) {
+	    for (SwitchCase sc : cases) {
+		sb.append(sc.toSource(depth + 1));
+	    }
+	}
+	sb.append(pad);
+	sb.append("}\n");
+	return sb.toString();
     }
 
     /**
-     * Visits this node, then the switch-expression, then the cases
-     * in lexical order.
+     * Visits this node, then the switch-expression, then the cases in lexical
+     * order.
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            expression.visit(v);
-            for (SwitchCase sc: getCases()) {
-                sc.visit(v);
-            }
-        }
+	if (v.visit(this)) {
+	    expression.visit(v);
+	    for (SwitchCase sc : getCases()) {
+		sc.visit(v);
+	    }
+	}
     }
 }

@@ -6,41 +6,43 @@
 
 package org.mozilla.javascript.ast;
 
+import org.mozilla.javascript.Token;
+
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
-import org.mozilla.javascript.Token;
-
 /**
- * Return statement.  Node type is {@link Token#RETURN}.<p>
+ * Return statement. Node type is {@link Token#RETURN}.
+ * <p>
  *
- * <pre><i>ReturnStatement</i> :
- *      <b>return</b> [<i>no LineTerminator here</i>] [Expression] ;</pre>
+ * <pre>
+ * <i>ReturnStatement</i> :
+ *      <b>return</b> [<i>no LineTerminator here</i>] [Expression] ;
+ * </pre>
  */
 public class ReturnStatement extends AstNode {
 
     private AstNode returnValue;
 
     {
-        type = Token.RETURN;
+	type = Token.RETURN;
     }
 
     public ReturnStatement() {
     }
 
     public ReturnStatement(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public ReturnStatement(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     public ReturnStatement(int pos, int len, AstNode returnValue) {
-        super(pos, len);
-        setReturnValue(returnValue);
+	super(pos, len);
+	setReturnValue(returnValue);
     }
-
 
     /**
      * @return This node as a JSON object in Esprima format.
@@ -48,38 +50,44 @@ public class ReturnStatement extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "ReturnStatement");
-		if(this.getReturnValue() != null) object.add("argument", this.getReturnValue().getJsonObject());
-		else object.add("argument", JsonNull.INSTANCE);
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "ReturnStatement");
+	if (this.getReturnValue() != null)
+	    object.add("argument", this.getReturnValue().getJsonObject());
+	else
+	    object.add("argument", JsonNull.INSTANCE);
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	ReturnStatement clone = (ReturnStatement)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	ReturnStatement clone = (ReturnStatement) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	AstNode returnValue = null;
-    	if(this.getReturnValue() != null) returnValue = this.getReturnValue().clone(clone);
-    	clone.setReturnValue(returnValue);
+	/* Clone the children. */
+	AstNode returnValue = null;
+	if (this.getReturnValue() != null)
+	    returnValue = this.getReturnValue().clone(clone);
+	clone.setReturnValue(returnValue);
 
-    	return clone;
+	return clone;
 
     }
 
@@ -87,30 +95,30 @@ public class ReturnStatement extends AstNode {
      * Returns return value, {@code null} if return value is void
      */
     public AstNode getReturnValue() {
-        return returnValue;
+	return returnValue;
     }
 
     /**
-     * Sets return value expression, and sets its parent to this node.
-     * Can be {@code null}.
+     * Sets return value expression, and sets its parent to this node. Can be
+     * {@code null}.
      */
     public void setReturnValue(AstNode returnValue) {
-        this.returnValue = returnValue;
-        if (returnValue != null)
-            returnValue.setParent(this);
+	this.returnValue = returnValue;
+	if (returnValue != null)
+	    returnValue.setParent(this);
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append("return");
-        if (returnValue != null) {
-            sb.append(" ");
-            sb.append(returnValue.toSource(0));
-        }
-        sb.append(";\n");
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append("return");
+	if (returnValue != null) {
+	    sb.append(" ");
+	    sb.append(returnValue.toSource(0));
+	}
+	sb.append(";\n");
+	return sb.toString();
     }
 
     /**
@@ -118,13 +126,13 @@ public class ReturnStatement extends AstNode {
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this) && returnValue != null) {
-            returnValue.visit(v);
-        }
+	if (v.visit(this) && returnValue != null) {
+	    returnValue.visit(v);
+	}
     }
 
-	@Override
-	public boolean isStatement() {
-		return true;
-	}
+    @Override
+    public boolean isStatement() {
+	return true;
+    }
 }

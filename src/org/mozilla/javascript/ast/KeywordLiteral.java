@@ -11,14 +11,10 @@ import org.mozilla.javascript.Token;
 import com.google.gson.JsonObject;
 
 /**
- * AST node for keyword literals:  currently, {@code this},
- * {@code null}, {@code true}, {@code false}, and {@code debugger}.
- * Node type is one of
- * {@link Token#THIS},
- * {@link Token#NULL},
- * {@link Token#TRUE},
- * {@link Token#FALSE}, or
- * {@link Token#DEBUGGER}.
+ * AST node for keyword literals: currently, {@code this}, {@code null},
+ * {@code true}, {@code false}, and {@code debugger}. Node type is one of
+ * {@link Token#THIS}, {@link Token#NULL}, {@link Token#TRUE},
+ * {@link Token#FALSE}, or {@link Token#DEBUGGER}.
  */
 public class KeywordLiteral extends AstNode {
 
@@ -26,20 +22,22 @@ public class KeywordLiteral extends AstNode {
     }
 
     public KeywordLiteral(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public KeywordLiteral(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
      * Constructs a new KeywordLiteral
-     * @param nodeType the token type
+     * 
+     * @param nodeType
+     *            the token type
      */
     public KeywordLiteral(int pos, int len, int nodeType) {
-        super(pos, len);
-        setType(nodeType);
+	super(pos, len);
+	setType(nodeType);
     }
 
     /**
@@ -48,106 +46,112 @@ public class KeywordLiteral extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-    		switch(this.getType()) {
-    		case Token.THIS:
-			object.addProperty("type", "ThisExpression");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("change-noprop", changeTypeNoProp.toString());
-			return object;
-    		case Token.TRUE:
-			object.addProperty("type", "Literal");
-			object.addProperty("value", true);
-			object.addProperty("raw", "true");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("change-noprop", changeTypeNoProp.toString());
-			return object;
-    		case Token.FALSE:
-			object.addProperty("type", "Literal");
-			object.addProperty("value", false);
-			object.addProperty("raw", "false");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("change-noprop", changeTypeNoProp.toString());
-			return object;
-    		case Token.DEBUGGER:
-			object.addProperty("type", "DebuggerStatement");
-			object.addProperty("change", changeType.toString());
-			object.addProperty("change-noprop", changeTypeNoProp.toString());
-			return object;
-    		case Token.NULL:
-    		default:
-			object.addProperty("type", "Literal");
-			object.addProperty("value", (String)null);
-			object.addProperty("raw", "null");
-    			object.addProperty("change", changeType.toString());
-    			object.addProperty("change-noprop", changeTypeNoProp.toString());
-			return object;
-    		}
+	JsonObject object = new JsonObject();
+	switch (this.getType()) {
+	case Token.THIS:
+	    object.addProperty("type", "ThisExpression");
+	    object.add("criteria", getCriteriaAsJson());
+	    object.add("dependencies", getDependenciesAsJson());
+	    object.addProperty("change", changeType.toString());
+	    object.addProperty("change-noprop", changeTypeNoProp.toString());
+	    return object;
+	case Token.TRUE:
+	    object.addProperty("type", "Literal");
+	    object.addProperty("value", true);
+	    object.addProperty("raw", "true");
+	    object.add("criteria", getCriteriaAsJson());
+	    object.add("dependencies", getDependenciesAsJson());
+	    object.addProperty("change", changeType.toString());
+	    object.addProperty("change-noprop", changeTypeNoProp.toString());
+	    return object;
+	case Token.FALSE:
+	    object.addProperty("type", "Literal");
+	    object.addProperty("value", false);
+	    object.addProperty("raw", "false");
+	    object.add("criteria", getCriteriaAsJson());
+	    object.add("dependencies", getDependenciesAsJson());
+	    object.addProperty("change", changeType.toString());
+	    object.addProperty("change-noprop", changeTypeNoProp.toString());
+	    return object;
+	case Token.DEBUGGER:
+	    object.addProperty("type", "DebuggerStatement");
+	    object.add("criteria", getCriteriaAsJson());
+	    object.add("dependencies", getDependenciesAsJson());
+	    object.addProperty("change", changeType.toString());
+	    object.addProperty("change-noprop", changeTypeNoProp.toString());
+	    return object;
+	case Token.NULL:
+	default:
+	    object.addProperty("type", "Literal");
+	    object.addProperty("value", (String) null);
+	    object.addProperty("raw", "null");
+	    object.add("criteria", getCriteriaAsJson());
+	    object.add("dependencies", getDependenciesAsJson());
+	    object.addProperty("change", changeType.toString());
+	    object.addProperty("change-noprop", changeTypeNoProp.toString());
+	    return object;
+	}
 
     }
 
     /**
      * Sets node token type
-     * @throws IllegalArgumentException if {@code nodeType} is unsupported
+     * 
+     * @throws IllegalArgumentException
+     *             if {@code nodeType} is unsupported
      */
     @Override
     public KeywordLiteral setType(int nodeType) {
-        if (!(nodeType == Token.THIS
-              || nodeType == Token.NULL
-              || nodeType == Token.TRUE
-              || nodeType == Token.FALSE
-              || nodeType == Token.DEBUGGER))
-            throw new IllegalArgumentException("Invalid node type: "
-                                               + nodeType);
-        type = nodeType;
-        return this;
+	if (!(nodeType == Token.THIS || nodeType == Token.NULL || nodeType == Token.TRUE
+		|| nodeType == Token.FALSE || nodeType == Token.DEBUGGER))
+	    throw new IllegalArgumentException("Invalid node type: " + nodeType);
+	type = nodeType;
+	return this;
     }
 
     /**
-     * Returns true if the token type is {@link Token#TRUE} or
-     * {@link Token#FALSE}.
+     * Returns true if the token type is {@link Token#TRUE} or {@link Token#FALSE}.
      */
     public boolean isBooleanLiteral() {
-        return type == Token.TRUE || type == Token.FALSE;
+	return type == Token.TRUE || type == Token.FALSE;
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        switch (getType()) {
-        case Token.THIS:
-            sb.append("this");
-            break;
-        case Token.NULL:
-            sb.append("null");
-            break;
-        case Token.TRUE:
-            sb.append("true");
-            break;
-        case Token.FALSE:
-            sb.append("false");
-            break;
-        case Token.DEBUGGER:
-            sb.append("debugger;\n");
-            break;
-        default:
-            throw new IllegalStateException("Invalid keyword literal type: "
-                                            + getType());
-        }
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	switch (getType()) {
+	case Token.THIS:
+	    sb.append("this");
+	    break;
+	case Token.NULL:
+	    sb.append("null");
+	    break;
+	case Token.TRUE:
+	    sb.append("true");
+	    break;
+	case Token.FALSE:
+	    sb.append("false");
+	    break;
+	case Token.DEBUGGER:
+	    sb.append("debugger;\n");
+	    break;
+	default:
+	    throw new IllegalStateException("Invalid keyword literal type: " + getType());
+	}
+	return sb.toString();
     }
 
     /**
-     * Visits this node.  There are no children to visit.
+     * Visits this node. There are no children to visit.
      */
     @Override
     public void visit(NodeVisitor v) {
-        v.visit(this);
+	v.visit(this);
     }
 
-	@Override
-	public boolean isStatement() {
-		return false;
-	}
+    @Override
+    public boolean isStatement() {
+	return false;
+    }
 }

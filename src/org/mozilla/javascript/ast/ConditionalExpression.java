@@ -11,18 +11,18 @@ import org.mozilla.javascript.Token;
 import com.google.gson.JsonObject;
 
 /**
- * AST node representing the ternary operator.  Node type is
- * {@link Token#HOOK}.
+ * AST node representing the ternary operator. Node type is {@link Token#HOOK}.
  *
- * <pre><i>ConditionalExpression</i> :
+ * <pre>
+ * <i>ConditionalExpression</i> :
  *        LogicalORExpression
  *        LogicalORExpression ? AssignmentExpression
- *                            : AssignmentExpression</pre>
+ *                            : AssignmentExpression
+ * </pre>
  *
- * <i>ConditionalExpressionNoIn</i> :
- *        LogicalORExpressionNoIn
- *        LogicalORExpressionNoIn ? AssignmentExpression
- *                                : AssignmentExpressionNoIn</pre>
+ * <i>ConditionalExpressionNoIn</i> : LogicalORExpressionNoIn
+ * LogicalORExpressionNoIn ? AssignmentExpression : AssignmentExpressionNoIn
+ * </pre>
  */
 public class ConditionalExpression extends AstNode {
 
@@ -33,18 +33,18 @@ public class ConditionalExpression extends AstNode {
     private int colonPosition = -1;
 
     {
-        type = Token.HOOK;
+	type = Token.HOOK;
     }
 
     public ConditionalExpression() {
     }
 
     public ConditionalExpression(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public ConditionalExpression(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -53,47 +53,53 @@ public class ConditionalExpression extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "ConditionalExpression");
-		object.add("test", this.getTestExpression().getJsonObject());
-		object.add("consequent", this.getTrueExpression().getJsonObject());
-		object.add("alternate", this.getFalseExpression().getJsonObject());
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "ConditionalExpression");
+	object.add("test", this.getTestExpression().getJsonObject());
+	object.add("consequent", this.getTrueExpression().getJsonObject());
+	object.add("alternate", this.getFalseExpression().getJsonObject());
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	ConditionalExpression clone = (ConditionalExpression)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	ConditionalExpression clone = (ConditionalExpression) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	AstNode test = null;
-    	AstNode falseEx = null;
-    	AstNode trueEx = null;
+	/* Clone the children. */
+	AstNode test = null;
+	AstNode falseEx = null;
+	AstNode trueEx = null;
 
-    	if(this.getTestExpression() != null) test = this.getTestExpression().clone(clone);
-    	if(this.getFalseExpression() != null) falseEx = this.getFalseExpression().clone(clone);
-    	if(this.getTrueExpression() != null) trueEx = this.getTrueExpression().clone(clone);
+	if (this.getTestExpression() != null)
+	    test = this.getTestExpression().clone(clone);
+	if (this.getFalseExpression() != null)
+	    falseEx = this.getFalseExpression().clone(clone);
+	if (this.getTrueExpression() != null)
+	    trueEx = this.getTrueExpression().clone(clone);
 
-    	clone.setTestExpression(test);
-    	clone.setFalseExpression(falseEx);
-    	clone.setTrueExpression(trueEx);
+	clone.setTestExpression(test);
+	clone.setFalseExpression(falseEx);
+	clone.setTrueExpression(trueEx);
 
-    	return clone;
+	return clone;
 
     }
 
@@ -101,125 +107,135 @@ public class ConditionalExpression extends AstNode {
      * Returns test expression
      */
     public AstNode getTestExpression() {
-        return testExpression;
+	return testExpression;
     }
 
     /**
      * Sets test expression, and sets its parent.
-     * @param testExpression test expression
-     * @throws IllegalArgumentException if testExpression is {@code null}
+     * 
+     * @param testExpression
+     *            test expression
+     * @throws IllegalArgumentException
+     *             if testExpression is {@code null}
      */
     public void setTestExpression(AstNode testExpression) {
-        assertNotNull(testExpression);
-        this.testExpression = testExpression;
-        testExpression.setParent(this);
+	assertNotNull(testExpression);
+	this.testExpression = testExpression;
+	testExpression.setParent(this);
     }
 
     /**
      * Returns expression to evaluate if test is true
      */
     public AstNode getTrueExpression() {
-        return trueExpression;
+	return trueExpression;
     }
 
     /**
-     * Sets expression to evaluate if test is true, and
-     * sets its parent to this node.
-     * @param trueExpression expression to evaluate if test is true
-     * @throws IllegalArgumentException if expression is {@code null}
+     * Sets expression to evaluate if test is true, and sets its parent to this
+     * node.
+     * 
+     * @param trueExpression
+     *            expression to evaluate if test is true
+     * @throws IllegalArgumentException
+     *             if expression is {@code null}
      */
     public void setTrueExpression(AstNode trueExpression) {
-        assertNotNull(trueExpression);
-        this.trueExpression = trueExpression;
-        trueExpression.setParent(this);
+	assertNotNull(trueExpression);
+	this.trueExpression = trueExpression;
+	trueExpression.setParent(this);
     }
 
     /**
      * Returns expression to evaluate if test is false
      */
     public AstNode getFalseExpression() {
-        return falseExpression;
+	return falseExpression;
     }
 
     /**
-     * Sets expression to evaluate if test is false, and sets its
-     * parent to this node.
-     * @param falseExpression expression to evaluate if test is false
-     * @throws IllegalArgumentException if {@code falseExpression}
-     * is {@code null}
+     * Sets expression to evaluate if test is false, and sets its parent to this
+     * node.
+     * 
+     * @param falseExpression
+     *            expression to evaluate if test is false
+     * @throws IllegalArgumentException
+     *             if {@code falseExpression} is {@code null}
      */
     public void setFalseExpression(AstNode falseExpression) {
-        assertNotNull(falseExpression);
-        this.falseExpression = falseExpression;
-        falseExpression.setParent(this);
+	assertNotNull(falseExpression);
+	this.falseExpression = falseExpression;
+	falseExpression.setParent(this);
     }
 
     /**
      * Returns position of ? token
      */
     public int getQuestionMarkPosition() {
-        return questionMarkPosition;
+	return questionMarkPosition;
     }
 
     /**
      * Sets position of ? token
-     * @param questionMarkPosition position of ? token
+     * 
+     * @param questionMarkPosition
+     *            position of ? token
      */
     public void setQuestionMarkPosition(int questionMarkPosition) {
-        this.questionMarkPosition = questionMarkPosition;
+	this.questionMarkPosition = questionMarkPosition;
     }
 
     /**
      * Returns position of : token
      */
     public int getColonPosition() {
-        return colonPosition;
+	return colonPosition;
     }
 
     /**
      * Sets position of : token
-     * @param colonPosition position of : token
+     * 
+     * @param colonPosition
+     *            position of : token
      */
     public void setColonPosition(int colonPosition) {
-        this.colonPosition = colonPosition;
+	this.colonPosition = colonPosition;
     }
 
     @Override
     public boolean hasSideEffects() {
-        if (testExpression == null
-            || trueExpression == null
-            || falseExpression == null) codeBug();
-        return trueExpression.hasSideEffects()
-               && falseExpression.hasSideEffects();
+	if (testExpression == null || trueExpression == null || falseExpression == null)
+	    codeBug();
+	return trueExpression.hasSideEffects() && falseExpression.hasSideEffects();
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append(testExpression.toSource(depth));
-        sb.append(" ? ");
-        sb.append(trueExpression.toSource(0));
-        sb.append(" : ");
-        sb.append(falseExpression.toSource(0));
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append(testExpression.toSource(depth));
+	sb.append(" ? ");
+	sb.append(trueExpression.toSource(0));
+	sb.append(" : ");
+	sb.append(falseExpression.toSource(0));
+	return sb.toString();
     }
 
     /**
-     * Visits this node, then the test-expression, the true-expression,
-     * and the false-expression.
+     * Visits this node, then the test-expression, the true-expression, and the
+     * false-expression.
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            testExpression.visit(v);
-            trueExpression.visit(v);
-            falseExpression.visit(v);
-        }
+	if (v.visit(this)) {
+	    testExpression.visit(v);
+	    trueExpression.visit(v);
+	    falseExpression.visit(v);
+	}
     }
 
-	@Override
-	public boolean isStatement() {
-		return false;
-	}
+    @Override
+    public boolean isStatement() {
+	return false;
+    }
 }

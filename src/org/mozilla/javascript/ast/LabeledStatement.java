@@ -6,38 +6,40 @@
 
 package org.mozilla.javascript.ast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.mozilla.javascript.Token;
 
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * A labeled statement.  A statement can have more than one label.  In
- * this AST representation, all labels for a statement are collapsed into
- * the "labels" list of a single {@link LabeledStatement} node. <p>
+ * A labeled statement. A statement can have more than one label. In this AST
+ * representation, all labels for a statement are collapsed into the "labels"
+ * list of a single {@link LabeledStatement} node.
+ * <p>
  *
- * Node type is {@link Token#EXPR_VOID}. <p>
+ * Node type is {@link Token#EXPR_VOID}.
+ * <p>
  */
 public class LabeledStatement extends AstNode {
 
-    private List<Label> labels = new ArrayList<Label>();  // always at least 1
+    private List<Label> labels = new ArrayList<Label>(); // always at least 1
     private AstNode statement;
 
     {
-        type = Token.EXPR_VOID;
+	type = Token.EXPR_VOID;
     }
 
     public LabeledStatement() {
     }
 
     public LabeledStatement(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public LabeledStatement(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -46,95 +48,103 @@ public class LabeledStatement extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "LabeledStatement");
-		object.add("label", this.getLabels().get(0).getJsonObject());
-		object.add("body", this.getStatement().getJsonObject());
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
-	}
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "LabeledStatement");
+	object.add("label", this.getLabels().get(0).getJsonObject());
+	object.add("body", this.getStatement().getJsonObject());
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
+    }
 
     /**
      * Returns label list
      */
     public List<Label> getLabels() {
-        return labels;
+	return labels;
     }
 
     /**
-     * Sets label list, setting the parent of each label
-     * in the list.  Replaces any existing labels.
-     * @throws IllegalArgumentException} if labels is {@code null}
+     * Sets label list, setting the parent of each label in the list. Replaces any
+     * existing labels.
+     * 
+     * @throws IllegalArgumentException}
+     *             if labels is {@code null}
      */
     public void setLabels(List<Label> labels) {
-        assertNotNull(labels);
-        if (this.labels != null)
-            this.labels.clear();
-        for (Label l : labels) {
-            addLabel(l);
-        }
+	assertNotNull(labels);
+	if (this.labels != null)
+	    this.labels.clear();
+	for (Label l : labels) {
+	    addLabel(l);
+	}
     }
 
     /**
      * Adds a label and sets its parent to this node.
-     * @throws IllegalArgumentException} if label is {@code null}
+     * 
+     * @throws IllegalArgumentException}
+     *             if label is {@code null}
      */
     public void addLabel(Label label) {
-        assertNotNull(label);
-        labels.add(label);
-        label.setParent(this);
+	assertNotNull(label);
+	labels.add(label);
+	label.setParent(this);
     }
 
     /**
      * Returns the labeled statement
      */
     public AstNode getStatement() {
-        return statement;
+	return statement;
     }
 
     /**
-     * Returns label with specified name from the label list for
-     * this labeled statement.  Returns {@code null} if there is no
-     * label with that name in the list.
+     * Returns label with specified name from the label list for this labeled
+     * statement. Returns {@code null} if there is no label with that name in the
+     * list.
      */
     public Label getLabelByName(String name) {
-        for (Label label : labels) {
-            if (name.equals(label.getName())) {
-                return label;
-            }
-        }
-        return null;
+	for (Label label : labels) {
+	    if (name.equals(label.getName())) {
+		return label;
+	    }
+	}
+	return null;
     }
 
     /**
      * Sets the labeled statement, and sets its parent to this node.
-     * @throws IllegalArgumentException if {@code statement} is {@code null}
+     * 
+     * @throws IllegalArgumentException
+     *             if {@code statement} is {@code null}
      */
     public void setStatement(AstNode statement) {
-        assertNotNull(statement);
-        this.statement = statement;
-        statement.setParent(this);
+	assertNotNull(statement);
+	this.statement = statement;
+	statement.setParent(this);
     }
 
     public Label getFirstLabel() {
-        return labels.get(0);
+	return labels.get(0);
     }
 
     @Override
     public boolean hasSideEffects() {
-        // just to avoid the default case for EXPR_VOID in AstNode
-        return true;
+	// just to avoid the default case for EXPR_VOID in AstNode
+	return true;
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        for (Label label : labels) {
-            sb.append(label.toSource(depth));  // prints newline
-        }
-        sb.append(statement.toSource(depth + 1));
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	for (Label label : labels) {
+	    sb.append(label.toSource(depth)); // prints newline
+	}
+	sb.append(statement.toSource(depth + 1));
+	return sb.toString();
     }
 
     /**
@@ -143,16 +153,16 @@ public class LabeledStatement extends AstNode {
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            for (AstNode label : labels) {
-                label.visit(v);
-            }
-            statement.visit(v);
-        }
+	if (v.visit(this)) {
+	    for (AstNode label : labels) {
+		label.visit(v);
+	    }
+	    statement.visit(v);
+	}
     }
 
-	@Override
-	public boolean isStatement() {
-		return true;
-	}
+    @Override
+    public boolean isStatement() {
+	return true;
+    }
 }

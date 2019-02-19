@@ -11,11 +11,13 @@ import org.mozilla.javascript.Token;
 import com.google.gson.JsonObject;
 
 /**
- * Node representing a catch-clause of a try-statement.
- * Node type is {@link Token#CATCH}.
+ * Node representing a catch-clause of a try-statement. Node type is
+ * {@link Token#CATCH}.
  *
- * <pre><i>CatchClause</i> :
- *        <b>catch</b> ( <i><b>Identifier</b></i> [<b>if</b> Expression] ) Block</pre>
+ * <pre>
+ * <i>CatchClause</i> :
+ *        <b>catch</b> ( <i><b>Identifier</b></i> [<b>if</b> Expression] ) Block
+ * </pre>
  */
 public class CatchClause extends AstNode {
 
@@ -27,18 +29,18 @@ public class CatchClause extends AstNode {
     private int rp = -1;
 
     {
-        type = Token.CATCH;
+	type = Token.CATCH;
     }
 
     public CatchClause() {
     }
 
     public CatchClause(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public CatchClause(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -47,187 +49,205 @@ public class CatchClause extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "CatchClause");
-		object.add("param", this.getVarName().getJsonObject());
-		object.add("body", this.getBody().getJsonObject());
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "CatchClause");
+	object.add("param", this.getVarName().getJsonObject());
+	object.add("body", this.getBody().getJsonObject());
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Returns catch variable node
+     * 
      * @return catch variable
      */
     public Name getVarName() {
-        return varName;
+	return varName;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	CatchClause clone = (CatchClause)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	CatchClause clone = (CatchClause) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	Block body = null;
-    	AstNode condition = null;
-    	Name varName = null;
+	/* Clone the children. */
+	Block body = null;
+	AstNode condition = null;
+	Name varName = null;
 
-    	if(this.getBody() != null) body = (Block)this.getBody().clone(clone);
-    	if(this.getCatchCondition() != null) condition = this.getCatchCondition().clone(clone);
-    	if(this.getVarName() != null) varName = (Name)this.getVarName().clone(clone);
+	if (this.getBody() != null)
+	    body = (Block) this.getBody().clone(clone);
+	if (this.getCatchCondition() != null)
+	    condition = this.getCatchCondition().clone(clone);
+	if (this.getVarName() != null)
+	    varName = (Name) this.getVarName().clone(clone);
 
-    	clone.setBody(body);
-    	clone.setCatchCondition(condition);
-    	clone.setVarName(varName);
+	clone.setBody(body);
+	clone.setCatchCondition(condition);
+	clone.setVarName(varName);
 
-    	return clone;
+	return clone;
 
     }
 
     /**
      * Sets catch variable node, and sets its parent to this node.
-     * @param varName catch variable
-     * @throws IllegalArgumentException if varName is {@code null}
+     * 
+     * @param varName
+     *            catch variable
+     * @throws IllegalArgumentException
+     *             if varName is {@code null}
      */
     public void setVarName(Name varName) {
-        assertNotNull(varName);
-        this.varName = varName;
-        varName.setParent(this);
+	assertNotNull(varName);
+	this.varName = varName;
+	varName.setParent(this);
     }
 
     /**
      * Returns catch condition node, if present
+     * 
      * @return catch condition node, {@code null} if not present
      */
     public AstNode getCatchCondition() {
-        return catchCondition;
+	return catchCondition;
     }
 
     /**
      * Sets catch condition node, and sets its parent to this node.
-     * @param catchCondition catch condition node.  Can be {@code null}.
+     * 
+     * @param catchCondition
+     *            catch condition node. Can be {@code null}.
      */
     public void setCatchCondition(AstNode catchCondition) {
-        this.catchCondition = catchCondition;
-        if (catchCondition != null)
-            catchCondition.setParent(this);
+	this.catchCondition = catchCondition;
+	if (catchCondition != null)
+	    catchCondition.setParent(this);
     }
 
     /**
      * Returns catch body
      */
     public Block getBody() {
-        return body;
+	return body;
     }
 
     /**
      * Sets catch body, and sets its parent to this node.
-     * @throws IllegalArgumentException if body is {@code null}
+     * 
+     * @throws IllegalArgumentException
+     *             if body is {@code null}
      */
     public void setBody(Block body) {
-        assertNotNull(body);
-        this.body = body;
-        body.setParent(this);
+	assertNotNull(body);
+	this.body = body;
+	body.setParent(this);
     }
 
     /**
      * Returns left paren position
      */
     public int getLp() {
-        return lp;
+	return lp;
     }
 
     /**
      * Sets left paren position
      */
     public void setLp(int lp) {
-        this.lp = lp;
+	this.lp = lp;
     }
 
     /**
      * Returns right paren position
      */
     public int getRp() {
-        return rp;
+	return rp;
     }
 
     /**
      * Sets right paren position
      */
     public void setRp(int rp) {
-        this.rp = rp;
+	this.rp = rp;
     }
 
     /**
      * Sets both paren positions
      */
     public void setParens(int lp, int rp) {
-        this.lp = lp;
-        this.rp = rp;
+	this.lp = lp;
+	this.rp = rp;
     }
 
     /**
      * Returns position of "if" keyword
+     * 
      * @return position of "if" keyword, if present, or -1
      */
     public int getIfPosition() {
-        return ifPosition;
+	return ifPosition;
     }
 
     /**
      * Sets position of "if" keyword
-     * @param ifPosition position of "if" keyword, if present, or -1
+     * 
+     * @param ifPosition
+     *            position of "if" keyword, if present, or -1
      */
     public void setIfPosition(int ifPosition) {
-        this.ifPosition = ifPosition;
+	this.ifPosition = ifPosition;
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append("catch (");
-        sb.append(varName.toSource(0));
-        if (catchCondition != null) {
-            sb.append(" if ");
-            sb.append(catchCondition.toSource(0));
-        }
-        sb.append(") ");
-        sb.append(body.toSource(0));
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append("catch (");
+	sb.append(varName.toSource(0));
+	if (catchCondition != null) {
+	    sb.append(" if ");
+	    sb.append(catchCondition.toSource(0));
+	}
+	sb.append(") ");
+	sb.append(body.toSource(0));
+	return sb.toString();
     }
 
     /**
-     * Visits this node, the catch var name node, the condition if
-     * non-{@code null}, and the catch body.
+     * Visits this node, the catch var name node, the condition if non-{@code null},
+     * and the catch body.
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            varName.visit(v);
-            if (catchCondition != null) {
-                catchCondition.visit(v);
-            }
-            body.visit(v);
-        }
+	if (v.visit(this)) {
+	    varName.visit(v);
+	    if (catchCondition != null) {
+		catchCondition.visit(v);
+	    }
+	    body.visit(v);
+	}
     }
 
-	@Override
-	public boolean isStatement() {
-		return false;
-	}
+    @Override
+    public boolean isStatement() {
+	return false;
+    }
 }

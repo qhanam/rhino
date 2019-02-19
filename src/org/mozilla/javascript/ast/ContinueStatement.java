@@ -12,11 +12,13 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
- * A continue statement.
- * Node type is {@link Token#CONTINUE}.<p>
+ * A continue statement. Node type is {@link Token#CONTINUE}.
+ * <p>
  *
- * <pre><i>ContinueStatement</i> :
- *   <b>continue</b> [<i>no LineTerminator here</i>] [Identifier] ;</pre>
+ * <pre>
+ * <i>ContinueStatement</i> :
+ *   <b>continue</b> [<i>no LineTerminator here</i>] [Identifier] ;
+ * </pre>
  */
 public class ContinueStatement extends Jump {
 
@@ -24,34 +26,34 @@ public class ContinueStatement extends Jump {
     private Loop target;
 
     {
-        type = Token.CONTINUE;
+	type = Token.CONTINUE;
     }
 
     public ContinueStatement() {
     }
 
     public ContinueStatement(int pos) {
-        this(pos, -1);
+	this(pos, -1);
     }
 
     public ContinueStatement(int pos, int len) {
-        // can't call super (Jump) for historical reasons
-        position = pos;
-        length = len;
+	// can't call super (Jump) for historical reasons
+	position = pos;
+	length = len;
     }
 
     public ContinueStatement(Name label) {
-        setLabel(label);
+	setLabel(label);
     }
 
     public ContinueStatement(int pos, Name label) {
-        this(pos);
-        setLabel(label);
+	this(pos);
+	setLabel(label);
     }
 
     public ContinueStatement(int pos, int len, Name label) {
-        this(pos, len);
-        setLabel(label);
+	this(pos, len);
+	setLabel(label);
     }
 
     /**
@@ -60,65 +62,75 @@ public class ContinueStatement extends Jump {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "ContinueStatement");
-		if(this.getLabel() != null) object.add("label", this.getLabel().getJsonObject());
-		else object.add("label", JsonNull.INSTANCE);
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "ContinueStatement");
+	if (this.getLabel() != null)
+	    object.add("label", this.getLabel().getJsonObject());
+	else
+	    object.add("label", JsonNull.INSTANCE);
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Returns continue target
      */
     public Loop getTarget() {
-        return target;
+	return target;
     }
 
     /**
-     * Sets continue target.  Does NOT set the parent of the target node:
-     * the target node is an ancestor of this node.
-     * @param target continue target
-     * @throws IllegalArgumentException if target is {@code null}
+     * Sets continue target. Does NOT set the parent of the target node: the target
+     * node is an ancestor of this node.
+     * 
+     * @param target
+     *            continue target
+     * @throws IllegalArgumentException
+     *             if target is {@code null}
      */
     public void setTarget(Loop target) {
-        assertNotNull(target);
-        this.target = target;
-        setJumpStatement(target);
+	assertNotNull(target);
+	this.target = target;
+	setJumpStatement(target);
     }
 
     /**
      * Returns the intended label of this continue statement
-     * @return the continue label.  Will be {@code null} if the statement
-     * consisted only of the keyword "continue".
+     * 
+     * @return the continue label. Will be {@code null} if the statement consisted
+     *         only of the keyword "continue".
      */
     public Name getLabel() {
-        return label;
+	return label;
     }
 
     /**
-     * Sets the intended label of this continue statement.
-     * Only applies if the statement was of the form "continue &lt;label&gt;".
-     * @param label the continue label, or {@code null} if not present.
+     * Sets the intended label of this continue statement. Only applies if the
+     * statement was of the form "continue &lt;label&gt;".
+     * 
+     * @param label
+     *            the continue label, or {@code null} if not present.
      */
     public void setLabel(Name label) {
-        this.label = label;
-        if (label != null)
-            label.setParent(this);
+	this.label = label;
+	if (label != null)
+	    label.setParent(this);
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append("continue");
-        if (label != null) {
-            sb.append(" ");
-            sb.append(label.toSource(0));
-        }
-        sb.append(";\n");
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append("continue");
+	if (label != null) {
+	    sb.append(" ");
+	    sb.append(label.toSource(0));
+	}
+	sb.append(";\n");
+	return sb.toString();
     }
 
     /**
@@ -126,8 +138,8 @@ public class ContinueStatement extends Jump {
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this) && label != null) {
-            label.visit(v);
-        }
+	if (v.visit(this) && label != null) {
+	    label.visit(v);
+	}
     }
 }

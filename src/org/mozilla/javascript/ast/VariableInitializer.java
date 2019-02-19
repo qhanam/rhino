@@ -6,18 +6,20 @@
 
 package org.mozilla.javascript.ast;
 
+import org.mozilla.javascript.Token;
+
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
-import org.mozilla.javascript.Token;
-
 /**
  * A variable declaration or initializer, part of a {@link VariableDeclaration}
- * expression.  The variable "target" can be a simple name or a destructuring
- * form.  The initializer, if present, can be any expression.<p>
+ * expression. The variable "target" can be a simple name or a destructuring
+ * form. The initializer, if present, can be any expression.
+ * <p>
  *
  * Node type is one of {@link Token#VAR}, {@link Token#CONST}, or
- * {@link Token#LET}.<p>
+ * {@link Token#LET}.
+ * <p>
  */
 public class VariableInitializer extends AstNode {
 
@@ -25,7 +27,7 @@ public class VariableInitializer extends AstNode {
     private AstNode initializer;
 
     {
-        type = Token.VAR;
+	type = Token.VAR;
     }
 
     /**
@@ -34,148 +36,159 @@ public class VariableInitializer extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "VariableDeclarator");
-		object.add("id", this.getTarget().getJsonObject());
-		if(this.getInitializer() != null) object.add("init", this.getInitializer().getJsonObject());
-		else object.add("init", JsonNull.INSTANCE);
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "VariableDeclarator");
+	object.add("id", this.getTarget().getJsonObject());
+	if (this.getInitializer() != null)
+	    object.add("init", this.getInitializer().getJsonObject());
+	else
+	    object.add("init", JsonNull.INSTANCE);
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	VariableInitializer clone = (VariableInitializer)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	VariableInitializer clone = (VariableInitializer) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	AstNode initializer = null;
-    	AstNode target = null;
+	/* Clone the children. */
+	AstNode initializer = null;
+	AstNode target = null;
 
-    	if(this.getInitializer() != null) initializer = this.getInitializer().clone(clone);
-    	if(this.getTarget() != null) target = this.getTarget().clone(clone);
+	if (this.getInitializer() != null)
+	    initializer = this.getInitializer().clone(clone);
+	if (this.getTarget() != null)
+	    target = this.getTarget().clone(clone);
 
-    	clone.setInitializer(initializer);
-    	clone.setTarget(target);
+	clone.setInitializer(initializer);
+	clone.setTarget(target);
 
-    	return clone;
+	return clone;
 
     }
 
     /**
      * Sets the node type.
-     * @throws IllegalArgumentException if {@code nodeType} is not one of
-     * {@link Token#VAR}, {@link Token#CONST}, or {@link Token#LET}
+     * 
+     * @throws IllegalArgumentException
+     *             if {@code nodeType} is not one of {@link Token#VAR},
+     *             {@link Token#CONST}, or {@link Token#LET}
      */
     public void setNodeType(int nodeType) {
-        if (nodeType != Token.VAR
-            && nodeType != Token.CONST
-            && nodeType != Token.LET)
-            throw new IllegalArgumentException("invalid node type");
-        setType(nodeType);
+	if (nodeType != Token.VAR && nodeType != Token.CONST && nodeType != Token.LET)
+	    throw new IllegalArgumentException("invalid node type");
+	setType(nodeType);
     }
 
     public VariableInitializer() {
     }
 
     public VariableInitializer(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public VariableInitializer(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
-
     /**
-     * Returns true if this is a destructuring assignment.  If so, the
-     * initializer must be non-{@code null}.
-     * @return {@code true} if the {@code target} field is a destructuring form
-     * (an {@link ArrayLiteral} or {@link ObjectLiteral} node)
+     * Returns true if this is a destructuring assignment. If so, the initializer
+     * must be non-{@code null}.
+     * 
+     * @return {@code true} if the {@code target} field is a destructuring form (an
+     *         {@link ArrayLiteral} or {@link ObjectLiteral} node)
      */
     public boolean isDestructuring() {
-        return !(target instanceof Name);
+	return !(target instanceof Name);
     }
 
     /**
      * Returns the variable name or destructuring form
      */
     public AstNode getTarget() {
-        return target;
+	return target;
     }
 
     /**
-     * Sets the variable name or destructuring form, and sets
-     * its parent to this node.
-     * @throws IllegalArgumentException if target is {@code null}
+     * Sets the variable name or destructuring form, and sets its parent to this
+     * node.
+     * 
+     * @throws IllegalArgumentException
+     *             if target is {@code null}
      */
     public void setTarget(AstNode target) {
-        // Don't throw exception if target is an "invalid" node type.
-        // See mozilla/js/tests/js1_7/block/regress-350279.js
-        if (target == null)
-            throw new IllegalArgumentException("invalid target arg");
-        this.target = target;
-        target.setParent(this);
+	// Don't throw exception if target is an "invalid" node type.
+	// See mozilla/js/tests/js1_7/block/regress-350279.js
+	if (target == null)
+	    throw new IllegalArgumentException("invalid target arg");
+	this.target = target;
+	target.setParent(this);
     }
 
     /**
      * Returns the initial value, or {@code null} if not provided
      */
     public AstNode getInitializer() {
-        return initializer;
+	return initializer;
     }
 
     /**
      * Sets the initial value expression, and sets its parent to this node.
-     * @param initializer the initial value.  May be {@code null}.
+     * 
+     * @param initializer
+     *            the initial value. May be {@code null}.
      */
     public void setInitializer(AstNode initializer) {
-        this.initializer = initializer;
-        if (initializer != null)
-            initializer.setParent(this);
+	this.initializer = initializer;
+	if (initializer != null)
+	    initializer.setParent(this);
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append(target.toSource(0));
-        if (initializer != null) {
-            sb.append (" = ");
-            sb.append(initializer.toSource(0));
-        }
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append(target.toSource(0));
+	if (initializer != null) {
+	    sb.append(" = ");
+	    sb.append(initializer.toSource(0));
+	}
+	return sb.toString();
     }
 
     /**
-     * Visits this node, then the target expression, then the initializer
-     * expression if present.
+     * Visits this node, then the target expression, then the initializer expression
+     * if present.
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            target.visit(v);
-            if (initializer != null) {
-                initializer.visit(v);
-            }
-        }
+	if (v.visit(this)) {
+	    target.visit(v);
+	    if (initializer != null) {
+		initializer.visit(v);
+	    }
+	}
     }
 
-	@Override
-	public boolean isStatement() {
-		return false;
-	}
+    @Override
+    public boolean isStatement() {
+	return false;
+    }
 }

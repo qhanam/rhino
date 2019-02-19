@@ -11,7 +11,7 @@ import org.mozilla.javascript.Token;
 import com.google.gson.JsonObject;
 
 /**
- * AST node representing an expression in a statement context.  The node type is
+ * AST node representing an expression in a statement context. The node type is
  * {@link Token#EXPR_VOID} if inside a function, or else
  * {@link Token#EXPR_RESULT} if inside a script.
  */
@@ -20,7 +20,7 @@ public class ExpressionStatement extends AstNode {
     private AstNode expr;
 
     {
-        type = Token.EXPR_VOID;
+	type = Token.EXPR_VOID;
     }
 
     /**
@@ -29,127 +29,140 @@ public class ExpressionStatement extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "ExpressionStatement");
-		object.add("expression", this.getExpression().getJsonObject());
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "ExpressionStatement");
+	object.add("expression", this.getExpression().getJsonObject());
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	ExpressionStatement clone = (ExpressionStatement)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	ExpressionStatement clone = (ExpressionStatement) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	AstNode expression = this.getExpression().clone(clone);
-    	clone.setExpression(expression);
+	/* Clone the children. */
+	AstNode expression = this.getExpression().clone(clone);
+	clone.setExpression(expression);
 
-    	return clone;
+	return clone;
 
     }
 
     /**
-     * Called by the parser to set node type to EXPR_RESULT
-     * if this node is not within a Function.
+     * Called by the parser to set node type to EXPR_RESULT if this node is not
+     * within a Function.
      */
     public void setHasResult() {
-        type = Token.EXPR_RESULT;
+	type = Token.EXPR_RESULT;
     }
 
     public ExpressionStatement() {
     }
 
     /**
-     * Constructs a new {@code ExpressionStatement} wrapping
-     * the specified expression.  Sets this node's position to the
-     * position of the wrapped node, and sets the wrapped node's
-     * position to zero.  Sets this node's length to the length of
-     * the wrapped node.
-     * @param expr the wrapped expression
-     * @param hasResult {@code true} if this expression has side
-     * effects.  If true, sets node type to EXPR_RESULT, else to EXPR_VOID.
+     * Constructs a new {@code ExpressionStatement} wrapping the specified
+     * expression. Sets this node's position to the position of the wrapped node,
+     * and sets the wrapped node's position to zero. Sets this node's length to the
+     * length of the wrapped node.
+     * 
+     * @param expr
+     *            the wrapped expression
+     * @param hasResult
+     *            {@code true} if this expression has side effects. If true, sets
+     *            node type to EXPR_RESULT, else to EXPR_VOID.
      */
     public ExpressionStatement(AstNode expr, boolean hasResult) {
-        this(expr);
-        if (hasResult) setHasResult();
+	this(expr);
+	if (hasResult)
+	    setHasResult();
     }
 
     /**
-     * Constructs a new {@code ExpressionStatement} wrapping
-     * the specified expression.  Sets this node's position to the
-     * position of the wrapped node, and sets the wrapped node's
-     * position to zero.  Sets this node's length to the length of
-     * the wrapped node.
-     * @param expr the wrapped expression
+     * Constructs a new {@code ExpressionStatement} wrapping the specified
+     * expression. Sets this node's position to the position of the wrapped node,
+     * and sets the wrapped node's position to zero. Sets this node's length to the
+     * length of the wrapped node.
+     * 
+     * @param expr
+     *            the wrapped expression
      */
     public ExpressionStatement(AstNode expr) {
-        this(expr.getPosition(), expr.getLength(), expr);
+	this(expr.getPosition(), expr.getLength(), expr);
     }
 
     public ExpressionStatement(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
      * Constructs a new {@code ExpressionStatement}
-     * @param expr the wrapped {@link AstNode}.
-     * The {@code ExpressionStatement}'s bounds are set to those of expr,
-     * and expr's parent is set to this node.
-     * @throws IllegalArgumentException if {@code expr} is null
+     * 
+     * @param expr
+     *            the wrapped {@link AstNode}. The {@code ExpressionStatement}'s
+     *            bounds are set to those of expr, and expr's parent is set to this
+     *            node.
+     * @throws IllegalArgumentException
+     *             if {@code expr} is null
      */
     public ExpressionStatement(int pos, int len, AstNode expr) {
-        super(pos, len);
-        setExpression(expr);
+	super(pos, len);
+	setExpression(expr);
     }
 
     /**
      * Returns the wrapped expression
      */
     public AstNode getExpression() {
-        return expr;
+	return expr;
     }
 
     /**
      * Sets the wrapped expression, and sets its parent to this node.
-     * @throws IllegalArgumentException} if expression is {@code null}
+     * 
+     * @throws IllegalArgumentException}
+     *             if expression is {@code null}
      */
     public void setExpression(AstNode expression) {
-        assertNotNull(expression);
-        expr = expression;
-        expression.setParent(this);
-        setLineno(expression.getLineno());
+	assertNotNull(expression);
+	expr = expression;
+	expression.setParent(this);
+	setLineno(expression.getLineno());
     }
 
     /**
      * Returns true if this node has side effects
-     * @throws IllegalStateException if expression has not yet
-     * been set.
+     * 
+     * @throws IllegalStateException
+     *             if expression has not yet been set.
      */
     @Override
     public boolean hasSideEffects() {
-        return type == Token.EXPR_RESULT || expr.hasSideEffects();
+	return type == Token.EXPR_RESULT || expr.hasSideEffects();
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(expr.toSource(depth));
-        sb.append(";\n");
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(expr.toSource(depth));
+	sb.append(";\n");
+	return sb.toString();
     }
 
     /**
@@ -157,13 +170,13 @@ public class ExpressionStatement extends AstNode {
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            expr.visit(v);
-        }
+	if (v.visit(this)) {
+	    expr.visit(v);
+	}
     }
 
-	@Override
-	public boolean isStatement() {
-		return true;
-	}
+    @Override
+    public boolean isStatement() {
+	return true;
+    }
 }

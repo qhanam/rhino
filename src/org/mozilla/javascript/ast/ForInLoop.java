@@ -11,10 +11,16 @@ import org.mozilla.javascript.Token;
 import com.google.gson.JsonObject;
 
 /**
- * For-in or for-each-in statement.  Node type is {@link Token#FOR}.<p>
+ * For-in or for-each-in statement. Node type is {@link Token#FOR}.
+ * <p>
  *
- * <pre><b>for</b> [<b>each</b>] ( LeftHandSideExpression <b>in</b> Expression ) Statement</pre>
- * <pre><b>for</b> [<b>each</b>] ( <b>var</b> VariableDeclarationNoIn <b>in</b> Expression ) Statement</pre>
+ * <pre>
+ * <b>for</b> [<b>each</b>] ( LeftHandSideExpression <b>in</b> Expression ) Statement
+ * </pre>
+ * 
+ * <pre>
+ * <b>for</b> [<b>each</b>] ( <b>var</b> VariableDeclarationNoIn <b>in</b> Expression ) Statement
+ * </pre>
  */
 public class ForInLoop extends Loop {
 
@@ -25,18 +31,18 @@ public class ForInLoop extends Loop {
     protected boolean isForEach;
 
     {
-        type = Token.FOR;
+	type = Token.FOR;
     }
 
     public ForInLoop() {
     }
 
     public ForInLoop(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public ForInLoop(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -45,48 +51,54 @@ public class ForInLoop extends Loop {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "ForInStatement");
-		object.add("left", this.getIterator().getJsonObject());
-		object.add("right", this.getIteratedObject().getJsonObject());
-		object.add("body", this.getBody().getJsonObject());
-		object.addProperty("each", false);
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "ForInStatement");
+	object.add("left", this.getIterator().getJsonObject());
+	object.add("right", this.getIteratedObject().getJsonObject());
+	object.add("body", this.getBody().getJsonObject());
+	object.addProperty("each", false);
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	ForInLoop clone = (ForInLoop)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	ForInLoop clone = (ForInLoop) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	AstNode iterated = null;
-    	AstNode iterator = null;
-    	AstNode body = null;
+	/* Clone the children. */
+	AstNode iterated = null;
+	AstNode iterator = null;
+	AstNode body = null;
 
-    	if(this.getIteratedObject() != null) iterated = this.getIteratedObject().clone(clone);
-    	if(this.getIterator() != null) iterator = this.getIterator().clone(clone);
-    	if(this.getBody() != null) body = this.getBody().clone(clone);
+	if (this.getIteratedObject() != null)
+	    iterated = this.getIteratedObject().clone(clone);
+	if (this.getIterator() != null)
+	    iterator = this.getIterator().clone(clone);
+	if (this.getBody() != null)
+	    body = this.getBody().clone(clone);
 
-    	clone.setIteratedObject(iterated);
-    	clone.setIterator(iterator);
-    	clone.setBody(body);
+	clone.setIteratedObject(iterated);
+	clone.setIterator(iterator);
+	clone.setBody(body);
 
-    	return clone;
+	return clone;
 
     }
 
@@ -94,102 +106,109 @@ public class ForInLoop extends Loop {
      * Returns loop iterator expression
      */
     public AstNode getIterator() {
-        return iterator;
+	return iterator;
     }
 
     /**
-     * Sets loop iterator expression:  the part before the "in" keyword.
-     * Also sets its parent to this node.
-     * @throws IllegalArgumentException if {@code iterator} is {@code null}
+     * Sets loop iterator expression: the part before the "in" keyword. Also sets
+     * its parent to this node.
+     * 
+     * @throws IllegalArgumentException
+     *             if {@code iterator} is {@code null}
      */
     public void setIterator(AstNode iterator) {
-        assertNotNull(iterator);
-        this.iterator = iterator;
-        iterator.setParent(this);
+	assertNotNull(iterator);
+	this.iterator = iterator;
+	iterator.setParent(this);
     }
 
     /**
      * Returns object being iterated over
      */
     public AstNode getIteratedObject() {
-        return iteratedObject;
+	return iteratedObject;
     }
 
     /**
      * Sets object being iterated over, and sets its parent to this node.
-     * @throws IllegalArgumentException if {@code object} is {@code null}
+     * 
+     * @throws IllegalArgumentException
+     *             if {@code object} is {@code null}
      */
     public void setIteratedObject(AstNode object) {
-        assertNotNull(object);
-        this.iteratedObject = object;
-        object.setParent(this);
+	assertNotNull(object);
+	this.iteratedObject = object;
+	object.setParent(this);
     }
 
     /**
      * Returns whether the loop is a for-each loop
      */
     public boolean isForEach() {
-        return isForEach;
+	return isForEach;
     }
 
     /**
      * Sets whether the loop is a for-each loop
      */
     public void setIsForEach(boolean isForEach) {
-        this.isForEach = isForEach;
+	this.isForEach = isForEach;
     }
 
     /**
      * Returns position of "in" keyword
      */
     public int getInPosition() {
-        return inPosition;
+	return inPosition;
     }
 
     /**
      * Sets position of "in" keyword
-     * @param inPosition position of "in" keyword,
-     * or -1 if not present (e.g. in presence of a syntax error)
+     * 
+     * @param inPosition
+     *            position of "in" keyword, or -1 if not present (e.g. in presence
+     *            of a syntax error)
      */
     public void setInPosition(int inPosition) {
-        this.inPosition = inPosition;
+	this.inPosition = inPosition;
     }
 
     /**
      * Returns position of "each" keyword
      */
     public int getEachPosition() {
-        return eachPosition;
+	return eachPosition;
     }
 
     /**
      * Sets position of "each" keyword
-     * @param eachPosition position of "each" keyword,
-     * or -1 if not present.
+     * 
+     * @param eachPosition
+     *            position of "each" keyword, or -1 if not present.
      */
     public void setEachPosition(int eachPosition) {
-        this.eachPosition = eachPosition;
+	this.eachPosition = eachPosition;
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append("for ");
-        if (isForEach()) {
-            sb.append("each ");
-        }
-        sb.append("(");
-        sb.append(iterator.toSource(0));
-        sb.append(" in ");
-        sb.append(iteratedObject.toSource(0));
-        sb.append(") ");
-        if (body.getType() == Token.BLOCK) {
-            sb.append(body.toSource(depth).trim()).append("\n");
-        } else {
-            sb.append("\n").append(body.toSource(depth+1));
-        }
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append("for ");
+	if (isForEach()) {
+	    sb.append("each ");
+	}
+	sb.append("(");
+	sb.append(iterator.toSource(0));
+	sb.append(" in ");
+	sb.append(iteratedObject.toSource(0));
+	sb.append(") ");
+	if (body.getType() == Token.BLOCK) {
+	    sb.append(body.toSource(depth).trim()).append("\n");
+	} else {
+	    sb.append("\n").append(body.toSource(depth + 1));
+	}
+	return sb.toString();
     }
 
     /**
@@ -197,10 +216,10 @@ public class ForInLoop extends Loop {
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            iterator.visit(v);
-            iteratedObject.visit(v);
-            body.visit(v);
-        }
+	if (v.visit(this)) {
+	    iterator.visit(v);
+	    iteratedObject.visit(v);
+	    body.visit(v);
+	}
     }
 }

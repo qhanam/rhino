@@ -12,10 +12,13 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
- * A break statement.  Node type is {@link Token#BREAK}.<p>
+ * A break statement. Node type is {@link Token#BREAK}.
+ * <p>
  *
- * <pre><i>BreakStatement</i> :
- *   <b>break</b> [<i>no LineTerminator here</i>] [Identifier] ;</pre>
+ * <pre>
+ * <i>BreakStatement</i> :
+ *   <b>break</b> [<i>no LineTerminator here</i>] [Identifier] ;
+ * </pre>
  */
 public class BreakStatement extends Jump {
 
@@ -23,20 +26,20 @@ public class BreakStatement extends Jump {
     private AstNode target;
 
     {
-        type = Token.BREAK;
+	type = Token.BREAK;
     }
 
     public BreakStatement() {
     }
 
     public BreakStatement(int pos) {
-        // can't call super (Jump) for historical reasons
-        position = pos;
+	// can't call super (Jump) for historical reasons
+	position = pos;
     }
 
     public BreakStatement(int pos, int len) {
-        position = pos;
-        length = len;
+	position = pos;
+	length = len;
     }
 
     /**
@@ -45,67 +48,79 @@ public class BreakStatement extends Jump {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();;
-		object.addProperty("type", "BreakStatement");
-		if(this.getBreakLabel() != null) object.add("label", this.getBreakLabel().getJsonObject());
-		else object.add("label", JsonNull.INSTANCE);
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-    		return object;
+	JsonObject object = new JsonObject();
+	;
+	object.addProperty("type", "BreakStatement");
+	if (this.getBreakLabel() != null)
+	    object.add("label", this.getBreakLabel().getJsonObject());
+	else
+	    object.add("label", JsonNull.INSTANCE);
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Returns the intended label of this break statement
-     * @return the break label.  {@code null} if the source code did
-     * not specify a specific break label via "break &lt;target&gt;".
+     * 
+     * @return the break label. {@code null} if the source code did not specify a
+     *         specific break label via "break &lt;target&gt;".
      */
     public Name getBreakLabel() {
-        return breakLabel;
+	return breakLabel;
     }
 
     /**
-     * Sets the intended label of this break statement, e.g.  'foo'
-     * in "break foo". Also sets the parent of the label to this node.
-     * @param label the break label, or {@code null} if the statement is
-     * just the "break" keyword by itself.
+     * Sets the intended label of this break statement, e.g. 'foo' in "break foo".
+     * Also sets the parent of the label to this node.
+     * 
+     * @param label
+     *            the break label, or {@code null} if the statement is just the
+     *            "break" keyword by itself.
      */
     public void setBreakLabel(Name label) {
-        breakLabel = label;
-        if (label != null)
-            label.setParent(this);
+	breakLabel = label;
+	if (label != null)
+	    label.setParent(this);
     }
 
     /**
      * Returns the statement to break to
-     * @return the break target.  Only {@code null} if the source
-     * code has an error in it.
+     * 
+     * @return the break target. Only {@code null} if the source code has an error
+     *         in it.
      */
     public AstNode getBreakTarget() {
-        return target;
+	return target;
     }
 
     /**
      * Sets the statement to break to.
-     * @param target the statement to break to
-     * @throws IllegalArgumentException if target is {@code null}
+     * 
+     * @param target
+     *            the statement to break to
+     * @throws IllegalArgumentException
+     *             if target is {@code null}
      */
     public void setBreakTarget(Jump target) {
-        assertNotNull(target);
-        this.target = target;
-        setJumpStatement(target);
+	assertNotNull(target);
+	this.target = target;
+	setJumpStatement(target);
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append("break");
-        if (breakLabel != null) {
-            sb.append(" ");
-            sb.append(breakLabel.toSource(0));
-        }
-        sb.append(";\n");
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append("break");
+	if (breakLabel != null) {
+	    sb.append(" ");
+	    sb.append(breakLabel.toSource(0));
+	}
+	sb.append(";\n");
+	return sb.toString();
     }
 
     /**
@@ -113,8 +128,8 @@ public class BreakStatement extends Jump {
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this) && breakLabel != null) {
-            breakLabel.visit(v);
-        }
+	if (v.visit(this) && breakLabel != null) {
+	    breakLabel.visit(v);
+	}
     }
 }

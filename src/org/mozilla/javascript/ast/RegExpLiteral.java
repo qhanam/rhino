@@ -6,13 +6,13 @@
 
 package org.mozilla.javascript.ast;
 
-import com.google.gson.JsonObject;
-
 import org.mozilla.javascript.Token;
 
+import com.google.gson.JsonObject;
+
 /**
- * AST node for a RegExp literal.
- * Node type is {@link Token#REGEXP}.<p>
+ * AST node for a RegExp literal. Node type is {@link Token#REGEXP}.
+ * <p>
  */
 public class RegExpLiteral extends AstNode {
 
@@ -20,18 +20,18 @@ public class RegExpLiteral extends AstNode {
     private String flags;
 
     {
-        type = Token.REGEXP;
+	type = Token.REGEXP;
     }
 
     public RegExpLiteral() {
     }
 
     public RegExpLiteral(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public RegExpLiteral(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -40,61 +40,64 @@ public class RegExpLiteral extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "Literal");
-		object.addProperty("value", this.getValue());
-		object.addProperty("raw", this.getValue());
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "Literal");
+	object.addProperty("value", this.getValue());
+	object.addProperty("raw", this.getValue());
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Returns the regexp string without delimiters
      */
     public String getValue() {
-        return value;
+	return value;
     }
 
     /**
      * Sets the regexp string without delimiters
-     * @throws IllegalArgumentException} if value is {@code null}
+     * 
+     * @throws IllegalArgumentException}
+     *             if value is {@code null}
      */
     public void setValue(String value) {
-        assertNotNull(value);
-        this.value = value;
+	assertNotNull(value);
+	this.value = value;
     }
 
     /**
      * Returns regexp flags, {@code null} or "" if no flags specified
      */
     public String getFlags() {
-        return flags;
+	return flags;
     }
 
     /**
-     * Sets regexp flags.  Can be {@code null} or "".
+     * Sets regexp flags. Can be {@code null} or "".
      */
     public void setFlags(String flags) {
-        this.flags = flags;
+	this.flags = flags;
     }
 
     @Override
     public String toSource(int depth) {
-        return makeIndent(depth) + "/" + value + "/"
-                + (flags == null ? "" : flags);
+	return makeIndent(depth) + "/" + value + "/" + (flags == null ? "" : flags);
     }
 
     /**
-     * Visits this node.  There are no children to visit.
+     * Visits this node. There are no children to visit.
      */
     @Override
     public void visit(NodeVisitor v) {
-        v.visit(this);
+	v.visit(this);
     }
 
-	@Override
-	public boolean isStatement() {
-		return false;
-	}
+    @Override
+    public boolean isStatement() {
+	return false;
+    }
 }

@@ -11,25 +11,26 @@ import org.mozilla.javascript.Token;
 import com.google.gson.JsonObject;
 
 /**
- * AST node for an empty expression.  Node type is {@link Token#EMPTY}.<p>
+ * AST node for an empty expression. Node type is {@link Token#EMPTY}.
+ * <p>
  *
  * To create an empty statement, wrap it with an {@link ExpressionStatement}.
  */
 public class EmptyExpression extends AstNode {
 
     {
-        type = Token.EMPTY;
+	type = Token.EMPTY;
     }
 
     public EmptyExpression() {
     }
 
     public EmptyExpression(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public EmptyExpression(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -38,28 +39,30 @@ public class EmptyExpression extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-		object.addProperty("type", "EmptyExpression");
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	object.addProperty("type", "EmptyExpression");
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     @Override
     public String toSource(int depth) {
-        return makeIndent(depth);
+	return makeIndent(depth);
     }
 
     /**
-     * Visits this node.  There are no children.
+     * Visits this node. There are no children.
      */
     @Override
     public void visit(NodeVisitor v) {
-        v.visit(this);
+	v.visit(this);
     }
 
-	@Override
-	public boolean isStatement() {
-		return false;
-	}
+    @Override
+    public boolean isStatement() {
+	return false;
+    }
 }

@@ -16,11 +16,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
- * Node for the root of a parse tree.  It contains the statements and functions
+ * Node for the root of a parse tree. It contains the statements and functions
  * in the script, and a list of {@link Comment} nodes associated with the script
- * as a whole.  Node type is {@link Token#SCRIPT}. <p>
+ * as a whole. Node type is {@link Token#SCRIPT}.
+ * <p>
  *
- * Note that the tree itself does not store errors.  To collect the parse errors
+ * Note that the tree itself does not store errors. To collect the parse errors
  * and warnings, pass an {@link org.mozilla.javascript.ErrorReporter} to the
  * {@link org.mozilla.javascript.Parser} via the
  * {@link org.mozilla.javascript.CompilerEnvirons}.
@@ -31,14 +32,14 @@ public class AstRoot extends ScriptNode {
     private boolean inStrictMode;
 
     {
-        type = Token.SCRIPT;
+	type = Token.SCRIPT;
     }
 
     public AstRoot() {
     }
 
     public AstRoot(int pos) {
-        super(pos);
+	super(pos);
     }
 
     /**
@@ -47,46 +48,49 @@ public class AstRoot extends ScriptNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-    		JsonArray array = new JsonArray();
-    		for(Node element : this) {
-    			array.add(((AstNode)element).getJsonObject());
-    		}
-		object.addProperty("type", "Program");
-		object.add("body", array);
-		object.addProperty("sourceType", "script");
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-    		return object;
+	JsonObject object = new JsonObject();
+	JsonArray array = new JsonArray();
+	for (Node element : this) {
+	    array.add(((AstNode) element).getJsonObject());
+	}
+	object.addProperty("type", "Program");
+	object.add("body", array);
+	object.addProperty("sourceType", "script");
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Get the shallow clone. */
-    	AstRoot clone = (AstRoot)super.clone();
-    	clone.setParent(parent);
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
+	/* Get the shallow clone. */
+	AstRoot clone = (AstRoot) super.clone();
+	clone.setParent(parent);
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
 
-    	/* Clone the children. */
-    	clone.removeChildren();
+	/* Clone the children. */
+	clone.removeChildren();
 
-    	/* Clone the children and add them. */
-    	for(Node c : this) {
-    		AstNode child = (AstNode) c;
-    		clone.addChild(child.clone(clone));
-    	}
+	/* Clone the children and add them. */
+	for (Node c : this) {
+	    AstNode child = (AstNode) c;
+	    clone.addChild(child.clone(clone));
+	}
 
-    	return clone;
+	return clone;
 
     }
 
@@ -95,89 +99,98 @@ public class AstRoot extends ScriptNode {
      */
     @Override
     public String getCFGLabel() {
-    	return "script entry";
+	return "script entry";
     }
 
     /**
      * Returns comment set
+     * 
      * @return comment set, sorted by start position. Can be {@code null}.
      */
     public SortedSet<Comment> getComments() {
-        return comments;
+	return comments;
     }
 
     /**
-     * Sets comment list, and updates the parent of each entry to point
-     * to this node.  Replaces any existing comments.
-     * @param comments comment list.  can be {@code null}.
+     * Sets comment list, and updates the parent of each entry to point to this
+     * node. Replaces any existing comments.
+     * 
+     * @param comments
+     *            comment list. can be {@code null}.
      */
     public void setComments(SortedSet<Comment> comments) {
-        if (comments == null) {
-            this.comments = null;
-        } else {
-            if (this.comments != null)
-                this.comments.clear();
-            for (Comment c : comments)
-                addComment(c);
-        }
+	if (comments == null) {
+	    this.comments = null;
+	} else {
+	    if (this.comments != null)
+		this.comments.clear();
+	    for (Comment c : comments)
+		addComment(c);
+	}
     }
 
     /**
      * Add a comment to the comment set.
-     * @param comment the comment node.
-     * @throws IllegalArgumentException if comment is {@code null}
+     * 
+     * @param comment
+     *            the comment node.
+     * @throws IllegalArgumentException
+     *             if comment is {@code null}
      */
     public void addComment(Comment comment) {
-        assertNotNull(comment);
-        if (comments == null) {
-            comments = new TreeSet<Comment>(new AstNode.PositionComparator());
-        }
-        comments.add(comment);
-        comment.setParent(this);
+	assertNotNull(comment);
+	if (comments == null) {
+	    comments = new TreeSet<Comment>(new AstNode.PositionComparator());
+	}
+	comments.add(comment);
+	comment.setParent(this);
     }
 
     public void setInStrictMode(boolean inStrictMode) {
-        this.inStrictMode = inStrictMode;
+	this.inStrictMode = inStrictMode;
     }
 
     public boolean isInStrictMode() {
-        return inStrictMode;
+	return inStrictMode;
     }
 
     /**
-     * Visits the comment nodes in the order they appear in the source code.
-     * The comments are not visited by the {@link #visit} function - you must
-     * use this function to visit them.
-     * @param visitor the callback object.  It is passed each comment node.
-     * The return value is ignored.
+     * Visits the comment nodes in the order they appear in the source code. The
+     * comments are not visited by the {@link #visit} function - you must use this
+     * function to visit them.
+     * 
+     * @param visitor
+     *            the callback object. It is passed each comment node. The return
+     *            value is ignored.
      */
     public void visitComments(NodeVisitor visitor) {
-        if (comments != null) {
-            for (Comment c : comments) {
-                visitor.visit(c);
-            }
-        }
+	if (comments != null) {
+	    for (Comment c : comments) {
+		visitor.visit(c);
+	    }
+	}
     }
 
     /**
-     * Visits the AST nodes, then the comment nodes.
-     * This method is equivalent to calling {@link #visit}, then
-     * {@link #visitComments}.  The return value
-     * is ignored while visiting comment nodes.
-     * @param visitor the callback object.
+     * Visits the AST nodes, then the comment nodes. This method is equivalent to
+     * calling {@link #visit}, then {@link #visitComments}. The return value is
+     * ignored while visiting comment nodes.
+     * 
+     * @param visitor
+     *            the callback object.
      */
     public void visitAll(NodeVisitor visitor) {
-        visit(visitor);
-        visitComments(visitor);
+	visit(visitor);
+	visitComments(visitor);
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        for (Node node : this) {
-            sb.append(((AstNode)node).toSource(depth));
-        }
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	for (Node node : this) {
+	    sb.append(((AstNode) node).toSource(depth));
+	}
+	return sb.toString();
     }
 
     /**
@@ -185,29 +198,30 @@ public class AstRoot extends ScriptNode {
      */
     @Override
     public String debugPrint() {
-        DebugPrintVisitor dpv = new DebugPrintVisitor(new StringBuilder(1000));
-        visitAll(dpv);
-        return dpv.toString();
+	DebugPrintVisitor dpv = new DebugPrintVisitor(new StringBuilder(1000));
+	visitAll(dpv);
+	return dpv.toString();
     }
 
     /**
-     * Debugging function to check that the parser has set the parent
-     * link for every node in the tree.
-     * @throws IllegalStateException if a parent link is missing
+     * Debugging function to check that the parser has set the parent link for every
+     * node in the tree.
+     * 
+     * @throws IllegalStateException
+     *             if a parent link is missing
      */
     public void checkParentLinks() {
-        this.visit(new NodeVisitor() {
-            @Override
-			public boolean visit(AstNode node) {
-                int type = node.getType();
-                if (type == Token.SCRIPT)
-                    return true;
-                if (node.getParent() == null)
-                    throw new IllegalStateException
-                            ("No parent for node: " + node
-                             + "\n" + node.toSource(0));
-                return true;
-            }
-        });
+	this.visit(new NodeVisitor() {
+	    @Override
+	    public boolean visit(AstNode node) {
+		int type = node.getType();
+		if (type == Token.SCRIPT)
+		    return true;
+		if (node.getParent() == null)
+		    throw new IllegalStateException(
+			    "No parent for node: " + node + "\n" + node.toSource(0));
+		return true;
+	    }
+	});
     }
 }

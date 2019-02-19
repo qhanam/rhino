@@ -17,12 +17,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
- * AST node for a function call.  Node type is {@link Token#CALL}.<p>
+ * AST node for a function call. Node type is {@link Token#CALL}.
+ * <p>
  */
 public class FunctionCall extends AstNode {
 
-    protected static final List<AstNode> NO_ARGS =
-        Collections.unmodifiableList(new ArrayList<AstNode>());
+    protected static final List<AstNode> NO_ARGS = Collections
+	    .unmodifiableList(new ArrayList<AstNode>());
 
     protected AstNode target;
     protected List<AstNode> arguments;
@@ -30,18 +31,18 @@ public class FunctionCall extends AstNode {
     protected int rp = -1;
 
     {
-        type = Token.CALL;
+	type = Token.CALL;
     }
 
     public FunctionCall() {
     }
 
     public FunctionCall(int pos) {
-        super(pos);
+	super(pos);
     }
 
     public FunctionCall(int pos, int len) {
-        super(pos, len);
+	super(pos, len);
     }
 
     /**
@@ -50,49 +51,56 @@ public class FunctionCall extends AstNode {
      */
     @Override
     public JsonObject getJsonObject() {
-    		JsonObject object = new JsonObject();
-    		JsonArray array = new JsonArray();
-    		for(AstNode argument : this.getArguments())
-    			array.add(argument.getJsonObject());
-		object.addProperty("type", "CallExpression");
-		object.add("callee", this.getTarget().getJsonObject());
-		object.add("arguments", array);
-    		object.addProperty("change", changeType.toString());
-    		object.addProperty("change-noprop", changeTypeNoProp.toString());
-		return object;
+	JsonObject object = new JsonObject();
+	JsonArray array = new JsonArray();
+	for (AstNode argument : this.getArguments())
+	    array.add(argument.getJsonObject());
+	object.addProperty("type", "CallExpression");
+	object.add("callee", this.getTarget().getJsonObject());
+	object.add("arguments", array);
+	object.add("criteria", getCriteriaAsJson());
+	object.add("dependencies", getDependenciesAsJson());
+	object.addProperty("change", changeType.toString());
+	object.addProperty("change-noprop", changeTypeNoProp.toString());
+	return object;
     }
 
     /**
      * Clones the AstNode.
+     * 
      * @return The clone of the AstNode.
      * @throws CloneNotSupportedException
      */
     @Override
     public AstNode clone(AstNode parent) {
 
-    	/* Create a new function call. We can't make a shallow clone because
-    	 * .setArguments will set both the original and the clone's args. */
-    	FunctionCall clone = new FunctionCall();
-    	clone.setParent(parent);
-    	clone.setLineno(this.getLineno());
-    	clone.moved = this.moved;
-    	clone.changeType = this.changeType;
-    	clone.changeTypeNoProp = this.changeTypeNoProp;
-    	clone.fixedPosition = this.fixedPosition;
-    	clone.ID = this.ID;
-    	clone.mappedNode = this.mappedNode;
+	/*
+	 * Create a new function call. We can't make a shallow clone because
+	 * .setArguments will set both the original and the clone's args.
+	 */
+	FunctionCall clone = new FunctionCall();
+	clone.setParent(parent);
+	clone.setLineno(this.getLineno());
+	clone.moved = this.moved;
+	clone.changeType = this.changeType;
+	clone.changeTypeNoProp = this.changeTypeNoProp;
+	clone.fixedPosition = this.fixedPosition;
+	clone.ID = this.ID;
+	clone.mappedNode = this.mappedNode;
 
-    	/* Clone the children. */
-    	AstNode target = null;
-    	List<AstNode> arguments = new LinkedList<AstNode>();
+	/* Clone the children. */
+	AstNode target = null;
+	List<AstNode> arguments = new LinkedList<AstNode>();
 
-    	if(this.getTarget() != null) target = this.getTarget().clone(clone);
-    	for(AstNode argument : this.getArguments()) arguments.add(argument.clone(clone));
+	if (this.getTarget() != null)
+	    target = this.getTarget().clone(clone);
+	for (AstNode argument : this.getArguments())
+	    arguments.add(argument.clone(clone));
 
-    	clone.setTarget(target);
-    	clone.setArguments(arguments);
+	clone.setTarget(target);
+	clone.setArguments(arguments);
 
-    	return clone;
+	return clone;
 
     }
 
@@ -100,109 +108,120 @@ public class FunctionCall extends AstNode {
      * Returns node evaluating to the function to call
      */
     public AstNode getTarget() {
-        return target;
+	return target;
     }
 
     /**
-     * Sets node evaluating to the function to call, and sets
-     * its parent to this node.
-     * @param target node evaluating to the function to call.
-     * @throws IllegalArgumentException} if target is {@code null}
+     * Sets node evaluating to the function to call, and sets its parent to this
+     * node.
+     * 
+     * @param target
+     *            node evaluating to the function to call.
+     * @throws IllegalArgumentException}
+     *             if target is {@code null}
      */
     public void setTarget(AstNode target) {
-        assertNotNull(target);
-        this.target = target;
-        target.setParent(this);
+	assertNotNull(target);
+	this.target = target;
+	target.setParent(this);
     }
 
     /**
      * Returns function argument list
-     * @return function argument list, or an empty immutable list if
-     *         there are no arguments.
+     * 
+     * @return function argument list, or an empty immutable list if there are no
+     *         arguments.
      */
     public List<AstNode> getArguments() {
-        return arguments != null ? arguments : NO_ARGS;
+	return arguments != null ? arguments : NO_ARGS;
     }
 
     /**
      * Sets function argument list
-     * @param arguments function argument list.  Can be {@code null},
-     *        in which case any existing args are removed.
+     * 
+     * @param arguments
+     *            function argument list. Can be {@code null}, in which case any
+     *            existing args are removed.
      */
     public void setArguments(List<AstNode> arguments) {
-        if (arguments == null) {
-            this.arguments = null;
-        } else {
-            if (this.arguments != null)
-                this.arguments.clear();
-            for (AstNode arg : arguments) {
-                addArgument(arg);
-            }
-        }
+	if (arguments == null) {
+	    this.arguments = null;
+	} else {
+	    if (this.arguments != null)
+		this.arguments.clear();
+	    for (AstNode arg : arguments) {
+		addArgument(arg);
+	    }
+	}
     }
 
     /**
      * Adds an argument to the list, and sets its parent to this node.
-     * @param arg the argument node to add to the list
-     * @throws IllegalArgumentException} if arg is {@code null}
+     * 
+     * @param arg
+     *            the argument node to add to the list
+     * @throws IllegalArgumentException}
+     *             if arg is {@code null}
      */
     public void addArgument(AstNode arg) {
-        assertNotNull(arg);
-        if (arguments == null) {
-            arguments = new ArrayList<AstNode>();
-        }
-        arguments.add(arg);
-        arg.setParent(this);
+	assertNotNull(arg);
+	if (arguments == null) {
+	    arguments = new ArrayList<AstNode>();
+	}
+	arguments.add(arg);
+	arg.setParent(this);
     }
 
     /**
      * Returns left paren position, -1 if missing
      */
     public int getLp() {
-        return lp;
+	return lp;
     }
 
     /**
      * Sets left paren position
-     * @param lp left paren position
+     * 
+     * @param lp
+     *            left paren position
      */
     public void setLp(int lp) {
-        this.lp = lp;
+	this.lp = lp;
     }
 
     /**
      * Returns right paren position, -1 if missing
      */
     public int getRp() {
-        return rp;
+	return rp;
     }
 
     /**
      * Sets right paren position
      */
     public void setRp(int rp) {
-        this.rp = rp;
+	this.rp = rp;
     }
 
     /**
      * Sets both paren positions
      */
     public void setParens(int lp, int rp) {
-        this.lp = lp;
-        this.rp = rp;
+	this.lp = lp;
+	this.rp = rp;
     }
 
     @Override
     public String toSource(int depth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(makeIndent(depth));
-        sb.append(target.toSource(0));
-        sb.append("(");
-        if (arguments != null) {
-            printList(arguments, sb);
-        }
-        sb.append(")");
-        return sb.toString();
+	StringBuilder sb = new StringBuilder();
+	sb.append(makeIndent(depth));
+	sb.append(target.toSource(0));
+	sb.append("(");
+	if (arguments != null) {
+	    printList(arguments, sb);
+	}
+	sb.append(")");
+	return sb.toString();
     }
 
     /**
@@ -210,16 +229,16 @@ public class FunctionCall extends AstNode {
      */
     @Override
     public void visit(NodeVisitor v) {
-        if (v.visit(this)) {
-            target.visit(v);
-            for (AstNode arg : getArguments()) {
-                arg.visit(v);
-            }
-        }
+	if (v.visit(this)) {
+	    target.visit(v);
+	    for (AstNode arg : getArguments()) {
+		arg.visit(v);
+	    }
+	}
     }
 
-	@Override
-	public boolean isStatement() {
-		return false;
-	}
+    @Override
+    public boolean isStatement() {
+	return false;
+    }
 }
