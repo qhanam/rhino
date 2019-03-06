@@ -163,6 +163,14 @@ public abstract class AstNode extends Node
 	this.criteria.put(relation, id);
     }
 
+    public Map<String, Integer> getCriteria() {
+	return this.criteria;
+    }
+
+    public Map<String, Set<Integer>> getDependencies() {
+	return this.dependencies;
+    }
+
     public JsonObject getCriteriaAsJson() {
 	JsonObject criteriaJson = new JsonObject();
 	for (Entry<String, Integer> entry : this.criteria.entrySet()) {
@@ -173,17 +181,18 @@ public abstract class AstNode extends Node
 	return criteriaJson;
     }
 
-    /**
-     * @author qhanam
-     */
     public void addDependency(String relation, Integer id) {
-	if (this.dependencies.containsKey(relation)) {
-	    this.dependencies.get(relation).add(id);
-	} else {
-	    Set<Integer> ids = new HashSet<Integer>();
-	    ids.add(id);
-	    this.dependencies.put(relation, ids);
+	if (this.criteria.containsKey(relation) && this.criteria.get(relation) == id) {
+	    // This node is the criterion and cannot depend on itself.
+	    return;
 	}
+
+	if (!this.dependencies.containsKey(relation)) {
+	    // Initialize a new dependency set for the relation.
+	    this.dependencies.put(relation, new HashSet<Integer>());
+	}
+
+	this.dependencies.get(relation).add(id);
     }
 
     public JsonObject getDependenciesAsJson() {
@@ -201,11 +210,6 @@ public abstract class AstNode extends Node
     }
 
     @Override
-    public void setID(Integer ID) {
-	this.ID = ID;
-    }
-
-    @Override
     public Integer getID() {
 	return this.ID;
     }
@@ -218,16 +222,6 @@ public abstract class AstNode extends Node
     @Override
     public Version getVersion() {
 	return this.version;
-    }
-
-    @Override
-    public void setDummy() {
-	this.dummy = true;
-    }
-
-    @Override
-    public boolean isDummy() {
-	return this.dummy;
     }
 
     /**
@@ -335,7 +329,6 @@ public abstract class AstNode extends Node
 	    clone.changeTypeNoProp = this.changeTypeNoProp;
 	    clone.moved = this.moved;
 	    clone.fixedPosition = this.fixedPosition;
-	    clone.ID = this.ID;
 	    return clone;
 	} catch (CloneNotSupportedException e) {
 	    return null;
@@ -491,6 +484,7 @@ public abstract class AstNode extends Node
 	this.moved = false;
 	this.criteria = new HashMap<String, Integer>();
 	this.dependencies = new HashMap<String, Set<Integer>>();
+	this.ID = UniqueIDs.getNextId();
     }
 
     /**
@@ -507,6 +501,7 @@ public abstract class AstNode extends Node
 	this.moved = false;
 	this.criteria = new HashMap<String, Integer>();
 	this.dependencies = new HashMap<String, Set<Integer>>();
+	this.ID = UniqueIDs.getNextId();
     }
 
     /**
@@ -526,6 +521,7 @@ public abstract class AstNode extends Node
 	this.moved = false;
 	this.criteria = new HashMap<String, Integer>();
 	this.dependencies = new HashMap<String, Set<Integer>>();
+	this.ID = UniqueIDs.getNextId();
     }
 
     /**
